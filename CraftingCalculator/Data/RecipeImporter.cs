@@ -1,27 +1,21 @@
-﻿using CraftingCalculator.DataAccessor;
+﻿using CraftingCalculator.DTOs;
 using CraftingCalculator.Models;
-using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CraftingCalculator.Data;
 
 class RecipeImporter : IImporter
 {
-    private List<Item> _items;
-    private List<CraftType> _craftTypes;
-    private List<Recipe> _recipes;
-    private List<Ingredient> _ingredients;
+    private List<ItemDTO> _itemDTOs;
+    private List<CraftTypeDTO> _craftTypeDTOs;
+    private List<RecipeDTO> _recipeDTOs;
+    private List<IngredientDTO> _ingredientDTOs;
 
     public void ImportRecipesToDb(List<string[]> rawData)
     {
-        _items = new List<Item>();
-        _craftTypes = new List<CraftType>();
-        _recipes = new List<Recipe>();
-        _ingredients = new List<Ingredient>();
+        _itemDTOs = new List<ItemDTO>();
+        _craftTypeDTOs = new List<CraftTypeDTO>();
+        _recipeDTOs = new List<RecipeDTO>();
+        _ingredientDTOs = new List<IngredientDTO>();
 
         ParseCsvData(rawData);
 
@@ -31,9 +25,6 @@ class RecipeImporter : IImporter
             SaveCraftTypesToDb(dbContext);
             SaveRecipesToDb(dbContext);
         }
-        
-
-        
     }
 
     private void ParseCsvData(List<string[]> rawData)
@@ -45,40 +36,38 @@ class RecipeImporter : IImporter
             var recipeItemName = row[4].Trim();
             var yield = row[5].Trim();
 
-            CraftType? craftType = GetCraftTypeWithName(_craftTypes, typeName);
-            Item? recipeItem = GetItemWithName(_items, recipeItemName);
+            CraftTypeDTO? craftTypeDTO = GetCraftTypeDTOWithName(_craftTypeDTOs, typeName);
+            ItemDTO? recipeItemDTO = GetItemDTOWithName(_itemDTOs, recipeItemName);
 
-            if (craftType == null)
+            if (craftTypeDTO == null)
             {
-                craftType = new CraftType
+                craftTypeDTO = new CraftTypeDTO
                 {
-                    Id = (uint)_craftTypes.Count,
+                    Id = (uint)_craftTypeDTOs.Count,
                     Name = typeName
                 };
-                _craftTypes.Add(craftType);
+                _craftTypeDTOs.Add(craftTypeDTO);
             }
 
-            if (recipeItem == null)
+            if (recipeItemDTO == null)
             {
-                recipeItem = new Item
+                recipeItemDTO = new ItemDTO
                 {
-                    Id = (uint)_items.Count,
+                    Id = (uint)_itemDTOs.Count,
                     Name = recipeItemName
                 };
-                _items.Add(recipeItem);
+                _itemDTOs.Add(recipeItemDTO);
             }
 
-            Recipe currentRecipe = new Recipe()
+            RecipeDTO recipeDTO = new RecipeDTO()
             {
-                Id = (uint)_recipes.Count,
-                CraftTypeId = craftType.Id,
-                CraftType = craftType,
-                ItemId = recipeItem.Id,
-                Item = recipeItem,
+                Id = (uint)_recipeDTOs.Count,
+                CraftTypeDTO = craftTypeDTO,
+                ItemDTO = recipeItemDTO,
                 Yield = uint.Parse(yield)
             };
 
-            _recipes.Add(currentRecipe);
+            _recipeDTOs.Add(recipeDTO);
 
             for (int i = 6; i < row.Length; i += 2)
             {
@@ -88,36 +77,34 @@ class RecipeImporter : IImporter
 
                 var count = row[i + 1].Trim();
 
-                Item? ingredientItem = GetItemWithName(_items, itemName);
+                ItemDTO? ingredientItem = GetItemDTOWithName(_itemDTOs, itemName);
 
                 if (ingredientItem == null)
                 {
-                    ingredientItem = new Item
+                    ingredientItem = new ItemDTO
                     {
-                        Id = (uint)_items.Count,
+                        Id = (uint)_itemDTOs.Count,
                         Name = itemName
                     };
-                    _items.Add(ingredientItem);
+                    _itemDTOs.Add(ingredientItem);
                 }
 
-                var ingredient = new Ingredient
+                var ingredient = new IngredientDTO
                 {
-                    Id = (uint)_ingredients.Count,
-                    RecipeId = currentRecipe.Id,
-                    Recipe = currentRecipe,
-                    ItemId = ingredientItem.Id,
-                    Item = ingredientItem,
+                    Id = (uint)_ingredientDTOs.Count,
+                    RecipeDTO = recipeDTO,
+                    ItemDTO = ingredientItem,
                     Count = uint.Parse(count)
                 };
 
-                _ingredients.Add(ingredient);
+                _ingredientDTOs.Add(ingredient);
             }
         }
     }
 
     private void SaveItemsToDb(CraftingDbContext dbContext)
     {
-        foreach(var item in _items )
+        foreach(var item in _itemDTOs )
         {
             if(!dbContext.Items.Any(i => i.Name == item.Name))
             {
@@ -129,7 +116,7 @@ class RecipeImporter : IImporter
 
     private void SaveCraftTypesToDb(CraftingDbContext dbContext)
     {
-        foreach (var type in _craftTypes)
+        foreach (var type in _craftTypeDTOs)
         {
             if (!dbContext.CraftTypes.Any(t => t.Name ==  type.Name))
             {
@@ -143,11 +130,11 @@ class RecipeImporter : IImporter
     {
         var dbRecipes = new List<Recipe>();
 
-        for(int i = 0; i < _recipes.Count; i++)
+        for(int i = 0; i < _recipeDTOs.Count; i++)
         {
-            var rawRecipe = _recipes[i];
-            var recipeItem = dbContext.Items.FirstOrDefault(i => i.Name == rawRecipe.Item.Name);
-            var craftType = dbContext.CraftTypes.FirstOrDefault(t => t.Name == rawRecipe.CraftType.Name);
+            var rawRecipe = _recipeDTOs[i];
+            var recipeItem = dbContext.Items.FirstOrDefault(i => i.Name == rawRecipe.ItemDTO.Name);
+            var craftType = dbContext.CraftTypes.FirstOrDefault(t => t.Name == rawRecipe.CraftTypeDTO.Name);
             if (recipeItem != null && craftType != null) {
                 var dbRecipe = dbContext.Recipes.FirstOrDefault(r => r.ItemId == recipeItem.Id && r.CraftTypeId == craftType.Id);
                 if (dbRecipe == null)
@@ -165,26 +152,26 @@ class RecipeImporter : IImporter
         }
         dbContext.SaveChanges();
 
-        for(int i = 0; i < _recipes.Count; i++)
+        for(int i = 0; i < _recipeDTOs.Count; i++)
         {
-            var localRecipe = _recipes[i];
-            var dbRecipe = dbRecipes[i];
+            var recipeDTO = _recipeDTOs[i];
+            var recipe = dbRecipes[i];
 
-            var ingredients = _ingredients.Where( i => i.RecipeId == localRecipe.Id).ToArray();
+            var ingredientDTOs = _ingredientDTOs.Where( i => i.RecipeDTO.Id == recipeDTO.Id).ToArray();
 
-            foreach(var ingredient in ingredients)
+            foreach(var ingredientDTO in ingredientDTOs)
             {
-                Item item = dbContext.Items.First( i => i.Name == ingredient.Item.Name );
+                Item item = dbContext.Items.First( i => i.Name == ingredientDTO.ItemDTO.Name );
 
-                var dbIngredient = dbContext.Ingredients.FirstOrDefault(i => i.ItemId == item.Id && i.RecipeId == dbRecipe.Id);
+                var dbIngredient = dbContext.Ingredients.FirstOrDefault(i => i.ItemId == item.Id && i.RecipeId == recipe.Id);
 
                 if(dbIngredient == null)
                 {
                     dbIngredient = new Ingredient
                     {
                         ItemId = item.Id,
-                        RecipeId = dbRecipe.Id,
-                        Count = ingredient.Count
+                        RecipeId = recipe.Id,
+                        Count = ingredientDTO.Count
                     };
 
                     dbContext.Ingredients.Add(dbIngredient);
@@ -194,12 +181,12 @@ class RecipeImporter : IImporter
         dbContext.SaveChanges();
     }
 
-    private CraftType? GetCraftTypeWithName(List<CraftType> craftTypes, string craftTypeName)
+    private CraftTypeDTO? GetCraftTypeDTOWithName(List<CraftTypeDTO> craftTypes, string craftTypeName)
     {
         return craftTypes.FirstOrDefault(t => t.Name ==  craftTypeName);
     }
 
-    private Item? GetItemWithName(List<Item> items, string itemName)
+    private ItemDTO? GetItemDTOWithName(List<ItemDTO> items, string itemName)
     {
         return items.FirstOrDefault(t => t.Name == itemName);
     }

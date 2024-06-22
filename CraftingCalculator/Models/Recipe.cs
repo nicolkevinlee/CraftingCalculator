@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace CraftingCalculator.Models;
+﻿namespace CraftingCalculator.Models;
 
 public class Recipe
 {
@@ -16,5 +9,4 @@ public class Recipe
     public uint ItemId { get; set; }
     public virtual Item Item { get; set; }
     public ICollection<Ingredient> Ingredients { get; }
-
 }
