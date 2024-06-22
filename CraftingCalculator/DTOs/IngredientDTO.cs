@@ -1,6 +1,6 @@
 ﻿namespace CraftingCalculator.DTOs;
 
-public class IngredientDTO
+public record IngredientDTO
 {
     public uint Id { get; set; }
     public uint Count { get; set; }

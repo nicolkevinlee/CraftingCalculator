@@ -1,6 +1,6 @@
 ﻿namespace CraftingCalculator.DTOs;
 
-public class ItemDTO
+public record ItemDTO
 {
     public uint Id { get; set; }
     public required string Name { get; set; }

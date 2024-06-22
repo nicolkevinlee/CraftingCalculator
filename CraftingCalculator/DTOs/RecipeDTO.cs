@@ -1,6 +1,6 @@
 ﻿namespace CraftingCalculator.DTOs;
 
-public class RecipeDTO
+public record RecipeDTO
 {
     public uint Id { get; set; }
     public uint Yield { get; set; }
