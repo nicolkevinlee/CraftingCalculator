@@ -37,7 +37,6 @@ partial class MainForm
         itemToolStripMenuItem1 = new ToolStripMenuItem();
         recipeToolStripMenuItem1 = new ToolStripMenuItem();
         importToolStripMenuItem = new ToolStripMenuItem();
-        button1 = new Button();
         menuStrip1.SuspendLayout();
         SuspendLayout();
         // 
@@ -67,13 +66,14 @@ partial class MainForm
         // itemToolStripMenuItem
         // 
         itemToolStripMenuItem.Name = "itemToolStripMenuItem";
-        itemToolStripMenuItem.Size = new Size(109, 22);
+        itemToolStripMenuItem.Size = new Size(180, 22);
         itemToolStripMenuItem.Text = "Item";
+        itemToolStripMenuItem.Click += itemToolStripMenuItem_Click;
         // 
         // recipeToolStripMenuItem
         // 
         recipeToolStripMenuItem.Name = "recipeToolStripMenuItem";
-        recipeToolStripMenuItem.Size = new Size(109, 22);
+        recipeToolStripMenuItem.Size = new Size(180, 22);
         recipeToolStripMenuItem.Text = "Recipe";
         // 
         // editToolStripMenuItem
@@ -102,22 +102,11 @@ partial class MainForm
         importToolStripMenuItem.Text = "Import";
         importToolStripMenuItem.Click += importToolStripMenuItem_Click;
         // 
-        // button1
-        // 
-        button1.Location = new Point(12, 51);
-        button1.Name = "button1";
-        button1.Size = new Size(75, 23);
-        button1.TabIndex = 1;
-        button1.Text = "Import";
-        button1.UseVisualStyleBackColor = true;
-        button1.Click += button1_Click;
-        // 
         // MainForm
         // 
         AutoScaleDimensions = new SizeF(7F, 15F);
         AutoScaleMode = AutoScaleMode.Font;
         ClientSize = new Size(800, 450);
-        Controls.Add(button1);
         Controls.Add(menuStrip1);
         MainMenuStrip = menuStrip1;
         Name = "MainForm";

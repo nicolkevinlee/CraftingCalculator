@@ -10,15 +10,15 @@ public partial class MainForm : Form
         InitializeComponent();
     }
 
-    private void button1_Click(object sender, EventArgs e)
-    {
-        
-
-    }
-
     private void importToolStripMenuItem_Click(object sender, EventArgs e)
     {
         var importForm = new ImportForm();
         importForm.ShowDialog();
+    }
+
+    private void itemToolStripMenuItem_Click(object sender, EventArgs e)
+    {
+        var addItemForm = new AddItemForm();
+        addItemForm.ShowDialog();
     }
 }

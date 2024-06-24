@@ -81,7 +81,11 @@ namespace CraftingCalculator.Forms
             }
             else
             {
-                if (e.Progress != null)
+                if(e.Error != null)
+                {
+                    //Handle Error
+                }
+                else if (e.Progress != null)
                 {
                     StatusLabel.Text = $"Saving {e.Progress} to Database...";
                 }
