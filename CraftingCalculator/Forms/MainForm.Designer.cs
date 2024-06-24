@@ -61,7 +61,7 @@ partial class MainForm
         // 
         addToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { itemToolStripMenuItem, recipeToolStripMenuItem });
         addToolStripMenuItem.Name = "addToolStripMenuItem";
-        addToolStripMenuItem.Size = new Size(110, 22);
+        addToolStripMenuItem.Size = new Size(180, 22);
         addToolStripMenuItem.Text = "Add";
         // 
         // itemToolStripMenuItem
@@ -80,7 +80,7 @@ partial class MainForm
         // 
         editToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { itemToolStripMenuItem1, recipeToolStripMenuItem1 });
         editToolStripMenuItem.Name = "editToolStripMenuItem";
-        editToolStripMenuItem.Size = new Size(110, 22);
+        editToolStripMenuItem.Size = new Size(180, 22);
         editToolStripMenuItem.Text = "Edit";
         // 
         // itemToolStripMenuItem1
@@ -98,8 +98,9 @@ partial class MainForm
         // importToolStripMenuItem
         // 
         importToolStripMenuItem.Name = "importToolStripMenuItem";
-        importToolStripMenuItem.Size = new Size(110, 22);
+        importToolStripMenuItem.Size = new Size(180, 22);
         importToolStripMenuItem.Text = "Import";
+        importToolStripMenuItem.Click += importToolStripMenuItem_Click;
         // 
         // button1
         // 
