@@ -31,11 +31,7 @@ partial class MainForm
         menuStrip1 = new MenuStrip();
         dataToolStripMenuItem = new ToolStripMenuItem();
         addToolStripMenuItem = new ToolStripMenuItem();
-        itemToolStripMenuItem = new ToolStripMenuItem();
-        recipeToolStripMenuItem = new ToolStripMenuItem();
         editToolStripMenuItem = new ToolStripMenuItem();
-        itemToolStripMenuItem1 = new ToolStripMenuItem();
-        recipeToolStripMenuItem1 = new ToolStripMenuItem();
         importToolStripMenuItem = new ToolStripMenuItem();
         menuStrip1.SuspendLayout();
         SuspendLayout();
@@ -58,42 +54,17 @@ partial class MainForm
         // 
         // addToolStripMenuItem
         // 
-        addToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { itemToolStripMenuItem, recipeToolStripMenuItem });
         addToolStripMenuItem.Name = "addToolStripMenuItem";
         addToolStripMenuItem.Size = new Size(180, 22);
-        addToolStripMenuItem.Text = "Add";
-        // 
-        // itemToolStripMenuItem
-        // 
-        itemToolStripMenuItem.Name = "itemToolStripMenuItem";
-        itemToolStripMenuItem.Size = new Size(180, 22);
-        itemToolStripMenuItem.Text = "Item";
-        itemToolStripMenuItem.Click += itemToolStripMenuItem_Click;
-        // 
-        // recipeToolStripMenuItem
-        // 
-        recipeToolStripMenuItem.Name = "recipeToolStripMenuItem";
-        recipeToolStripMenuItem.Size = new Size(180, 22);
-        recipeToolStripMenuItem.Text = "Recipe";
+        addToolStripMenuItem.Text = "Items";
+        addToolStripMenuItem.Click += addToolStripMenuItem_Click;
         // 
         // editToolStripMenuItem
         // 
-        editToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { itemToolStripMenuItem1, recipeToolStripMenuItem1 });
         editToolStripMenuItem.Name = "editToolStripMenuItem";
         editToolStripMenuItem.Size = new Size(180, 22);
-        editToolStripMenuItem.Text = "Edit";
-        // 
-        // itemToolStripMenuItem1
-        // 
-        itemToolStripMenuItem1.Name = "itemToolStripMenuItem1";
-        itemToolStripMenuItem1.Size = new Size(109, 22);
-        itemToolStripMenuItem1.Text = "Item";
-        // 
-        // recipeToolStripMenuItem1
-        // 
-        recipeToolStripMenuItem1.Name = "recipeToolStripMenuItem1";
-        recipeToolStripMenuItem1.Size = new Size(109, 22);
-        recipeToolStripMenuItem1.Text = "Recipe";
+        editToolStripMenuItem.Text = "Recipes";
+        editToolStripMenuItem.Click += editToolStripMenuItem_Click;
         // 
         // importToolStripMenuItem
         // 
@@ -124,9 +95,5 @@ partial class MainForm
     private ToolStripMenuItem addToolStripMenuItem;
     private ToolStripMenuItem editToolStripMenuItem;
     private ToolStripMenuItem importToolStripMenuItem;
-    private ToolStripMenuItem itemToolStripMenuItem;
-    private ToolStripMenuItem recipeToolStripMenuItem;
-    private ToolStripMenuItem itemToolStripMenuItem1;
-    private ToolStripMenuItem recipeToolStripMenuItem1;
     private Button button1;
 }

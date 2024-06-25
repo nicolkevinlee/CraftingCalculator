@@ -6,4 +6,5 @@ public record RecipeDTO
     public uint Yield { get; set; }
     public CraftTypeDTO CraftTypeDTO { get; set; }
     public ItemDTO ItemDTO { get; set; }
+    public override string ToString() => ItemDTO.Name;
 }

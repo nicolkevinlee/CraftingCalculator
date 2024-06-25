@@ -16,9 +16,15 @@ public partial class MainForm : Form
         importForm.ShowDialog();
     }
 
-    private void itemToolStripMenuItem_Click(object sender, EventArgs e)
+    private void addToolStripMenuItem_Click(object sender, EventArgs e)
     {
-        var addItemForm = new AddItemForm();
-        addItemForm.ShowDialog();
+        var viewItemsForm = new ViewItemsForm();
+        viewItemsForm.ShowDialog();
+    }
+
+    private void editToolStripMenuItem_Click(object sender, EventArgs e)
+    {
+        var viewRecipesForm = new ViewRecipesForm();
+        viewRecipesForm.ShowDialog();
     }
 }
