@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CraftingCalculator.Migrations
 {
     [DbContext(typeof(CraftingDbContext))]
-    [Migration("20240621123311_InitialCreate")]
+    [Migration("20240626181954_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -51,8 +51,8 @@ namespace CraftingCalculator.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
-                    b.Property<long>("Count")
-                        .HasColumnType("bigint");
+                    b.Property<byte>("Count")
+                        .HasColumnType("tinyint");
 
                     b.Property<long>("ItemId")
                         .HasColumnType("bigint");
@@ -102,8 +102,11 @@ namespace CraftingCalculator.Migrations
                     b.Property<long>("ItemId")
                         .HasColumnType("bigint");
 
-                    b.Property<long>("Yield")
-                        .HasColumnType("bigint");
+                    b.Property<int>("RecipeLevel")
+                        .HasColumnType("int");
+
+                    b.Property<byte>("Yield")
+                        .HasColumnType("tinyint");
 
                     b.HasKey("Id");
 

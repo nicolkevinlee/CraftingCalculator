@@ -14,10 +14,10 @@ class RecipeParser
 
         foreach (var row in rawData)
         {
-
+            var recipeItemName = row[1].Trim();
             var typeName = row[2].Trim();
-            var recipeItemName = row[4].Trim();
-            var yield = row[5].Trim();
+            var recipeLevel = row[3].Trim();
+            var yield = row[21].Trim();
 
             CraftTypeDTO? craftTypeDTO = GetCraftTypeDTOWithName(craftTypeDTOs, typeName);
             ItemDTO? recipeItemDTO = GetItemDTOWithName(itemDTOs, recipeItemName);
@@ -37,7 +37,7 @@ class RecipeParser
                 recipeItemDTO = new ItemDTO
                 {
                     Id = (uint)itemDTOs.Count,
-                    Name = recipeItemName
+                    Name = recipeItemName,
                 };
                 itemDTOs.Add(recipeItemDTO);
             }
@@ -47,18 +47,19 @@ class RecipeParser
                 Id = (uint)recipeDTOs.Count,
                 CraftTypeDTO = craftTypeDTO,
                 ItemDTO = recipeItemDTO,
-                Yield = uint.Parse(yield)
+                Yield = byte.Parse(yield),
+                RecipeLevel = ushort.Parse(recipeLevel)
             };
 
             recipeDTOs.Add(recipeDTO);
 
-            for (int i = 6; i < row.Length; i += 2)
+            for (int i = 22, j = 0; i < row.Length && j < 8; i += 5, j++)
             {
-                var itemName = row[i].Trim();
+                var itemName = row[i + 1].Trim();
 
-                if (string.IsNullOrEmpty(itemName)) break;
+                if (string.IsNullOrEmpty(itemName)) continue;
 
-                var count = row[i + 1].Trim();
+                var count = row[i + 4].Trim();
 
                 ItemDTO? ingredientItem = GetItemDTOWithName(itemDTOs, itemName);
 
@@ -77,7 +78,7 @@ class RecipeParser
                     Id = (uint)ingredientDTOs.Count,
                     RecipeDTO = recipeDTO,
                     ItemDTO = ingredientItem,
-                    Count = uint.Parse(count)
+                    Count = byte.Parse(count)
                 };
 
                 ingredientDTOs.Add(ingredient);

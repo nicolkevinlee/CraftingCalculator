@@ -9,6 +9,8 @@ public partial class RecipePicker : UserControl
     private BindingList<RecipeDTO> _filteredRecipes;
     private List<RecipeDTO>? _allRecipes;
     private RecipeDTO? _selectedRecipe;
+    private uint _minRecipeLevel;
+    private uint _maxRecipeLevel;
     public event EventHandler<RecipeSelectedEventArgs> RecipeSelected;
 
     public RecipePicker()
@@ -16,6 +18,8 @@ public partial class RecipePicker : UserControl
         _selectedRecipe = null;
         _allRecipes = null;
         _filteredRecipes = new BindingList<RecipeDTO>();
+        _minRecipeLevel = 0;
+        _maxRecipeLevel = 0;
         InitializeComponent();
     }
     public void LoadRecipes()
@@ -27,6 +31,7 @@ public partial class RecipePicker : UserControl
                 {
                     Id = r.Id,
                     Yield = r.Yield,
+                    RecipeLevel = r.RecipeLevel,
                     CraftTypeDTO = new CraftTypeDTO()
                     {
                         Id = r.CraftTypeId,
@@ -49,11 +54,11 @@ public partial class RecipePicker : UserControl
         using (var dbContext = new CraftingDbContext())
         {
             var ingredientsToDelete = dbContext.Ingredients.Where(i => i.RecipeId == recipe.Id);
-            foreach(var ingredient in ingredientsToDelete)
+            foreach (var ingredient in ingredientsToDelete)
             {
                 dbContext.Ingredients.Remove(ingredient);
             }
-            dbContext.Recipes.Remove(dbContext.Recipes.Single(r=>r.Id == recipe.Id));
+            dbContext.Recipes.Remove(dbContext.Recipes.Single(r => r.Id == recipe.Id));
             dbContext.SaveChanges();
             _allRecipes.Remove(recipe);
         }
@@ -75,16 +80,36 @@ public partial class RecipePicker : UserControl
 
         _filteredRecipes.Clear();
 
+        List<RecipeDTO>? searchResult = null;
+
+        if (_minRecipeLevel > 0)
+        {
+            searchResult = _allRecipes!.Where(r => r.RecipeLevel >= _minRecipeLevel).ToList();
+        }
+        else
+        {
+            searchResult = _allRecipes!.ToList();
+        }
+
+        if (_maxRecipeLevel > 0)
+        {
+            searchResult = searchResult!.Where(r => r.RecipeLevel <= _maxRecipeLevel).ToList();
+        }
+        else
+        {
+            searchResult = searchResult!.ToList();
+        }
+
         if (string.IsNullOrWhiteSpace(searchText))
         {
-            _allRecipes!.ForEach(i =>
+            searchResult!.ForEach(i =>
             {
                 _filteredRecipes.Add(i);
             });
         }
         else
         {
-            var searchResult = _allRecipes!.Where(i => i.ItemDTO.Name.ToLower().Contains(searchText.ToLower())).ToList();
+            searchResult = searchResult!.Where(i => i.ItemDTO.Name.ToLower().Contains(searchText.ToLower())).ToList();
             searchResult.ForEach(i =>
             {
                 _filteredRecipes.Add(i);
@@ -92,8 +117,19 @@ public partial class RecipePicker : UserControl
         }
     }
 
-    private void SearchTextBox_TextChanged(object sender, EventArgs e)
+    private void SearchButton_Click(object sender, EventArgs e)
     {
+        var recipeLevelText = MinRecipeLevelTextBox.Text;
+        uint recipeLevel;
+        var success = uint.TryParse(recipeLevelText, out recipeLevel);
+        if (!success) recipeLevel = 0;
+        _minRecipeLevel = recipeLevel;
+
+        recipeLevelText = MaxRecipeLevelTextBox.Text;
+        success = uint.TryParse(recipeLevelText, out recipeLevel);
+        if (!success) recipeLevel = 0;
+        _maxRecipeLevel = recipeLevel;
+
         RefreshList();
     }
 }

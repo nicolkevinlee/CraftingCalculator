@@ -41,4 +41,13 @@ public partial class ViewRecipesForm : Form
     {
         RecipePicker.LoadRecipes();
     }
+
+    private void ViewButton_Click(object sender, EventArgs e)
+    {
+
+        if (_selectedRecipe == null) return;
+
+        var viewSingleRecipeForm = new ViewSingleRecipeForm(_selectedRecipe);
+        viewSingleRecipeForm.ShowDialog();
+    }
 }

@@ -57,7 +57,7 @@ namespace CraftingCalculator.Forms
             var csvDataAccessor = new CSVDataAccessor();
             var recipeParser = new RecipeParser();
             var recipeImporter = new RecipeImporter();
-            var csvData = csvDataAccessor.Read("Recipes.csv");
+            var csvData = csvDataAccessor.Read(_filePath);
 
             recipeImporter.StatusUpdated += ImportUpdated;
 

@@ -42,7 +42,8 @@ namespace CraftingCalculator.Migrations
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Yield = table.Column<long>(type: "bigint", nullable: false),
+                    Yield = table.Column<byte>(type: "tinyint", nullable: false),
+                    RecipeLevel = table.Column<int>(type: "int", nullable: false),
                     CraftTypeId = table.Column<long>(type: "bigint", nullable: false),
                     ItemId = table.Column<long>(type: "bigint", nullable: false)
                 },
@@ -69,7 +70,7 @@ namespace CraftingCalculator.Migrations
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Count = table.Column<long>(type: "bigint", nullable: false),
+                    Count = table.Column<byte>(type: "tinyint", nullable: false),
                     RecipeId = table.Column<long>(type: "bigint", nullable: false),
                     ItemId = table.Column<long>(type: "bigint", nullable: false)
                 },

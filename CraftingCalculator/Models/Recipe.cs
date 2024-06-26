@@ -3,7 +3,8 @@
 public class Recipe
 {
     public uint Id { get; set; }
-    public uint Yield { get; set; }
+    public byte Yield { get; set; }
+    public ushort RecipeLevel { get; set; }
     public uint CraftTypeId { get; set; }
     public virtual CraftType CraftType { get; set; }
     public uint ItemId { get; set; }

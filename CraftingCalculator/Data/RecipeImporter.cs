@@ -29,12 +29,12 @@ class RecipeImporter : IImporter
 
         foreach (var item in itemDTOs)
         {
-            if (!dbContext.Items.AnyAsync(i => i.Name == item.Name).Result)
+            if (!dbContext.Items.Any(i => i.Name == item.Name))
             {
-                dbContext.Items.AddAsync(new Item { Name = item.Name });
+                dbContext.Items.Add(new Item { Name = item.Name });
             }
         }
-        dbContext.SaveChangesAsync();
+        dbContext.SaveChanges();
         
     }
 
@@ -47,12 +47,12 @@ class RecipeImporter : IImporter
         });
         foreach (var type in craftTypeDTOs)
         {
-            if (!dbContext.CraftTypes.AnyAsync(t => t.Name == type.Name).Result)
+            if (!dbContext.CraftTypes.Any(t => t.Name == type.Name))
             {
-                dbContext.CraftTypes.AddAsync(new CraftType { Name = type.Name });
+                dbContext.CraftTypes.Add(new CraftType { Name = type.Name });
             }
         }
-        dbContext.SaveChangesAsync();
+        dbContext.SaveChanges();
     }
 
     private void SaveRecipesToDb(CraftingDbContext dbContext, List<RecipeDTO> recipeDTOs, List<IngredientDTO> ingredientDTOs)
@@ -68,24 +68,25 @@ class RecipeImporter : IImporter
         for(int i = 0; i < recipeDTOs.Count; i++)
         {
             var rawRecipe = recipeDTOs[i];
-            var recipeItem = dbContext.Items.FirstOrDefaultAsync(i => i.Name == rawRecipe.ItemDTO.Name).Result;
-            var craftType = dbContext.CraftTypes.FirstOrDefaultAsync(t => t.Name == rawRecipe.CraftTypeDTO.Name).Result;
+            var recipeItem = dbContext.Items.FirstOrDefault(i => i.Name == rawRecipe.ItemDTO.Name);
+            var craftType = dbContext.CraftTypes.FirstOrDefault(t => t.Name == rawRecipe.CraftTypeDTO.Name);
             if (recipeItem != null && craftType != null) {
-                var dbRecipe = dbContext.Recipes.FirstOrDefaultAsync(r => r.ItemId == recipeItem.Id && r.CraftTypeId == craftType.Id).Result;
+                var dbRecipe = dbContext.Recipes.FirstOrDefault(r => r.ItemId == recipeItem.Id && r.CraftTypeId == craftType.Id);
                 if (dbRecipe == null)
                 {
                     dbRecipe = new Recipe
                     {
                         ItemId = recipeItem.Id,
                         CraftTypeId = craftType.Id,
-                        Yield = rawRecipe.Yield
+                        Yield = rawRecipe.Yield,
+                        RecipeLevel = rawRecipe.RecipeLevel
                     };
-                    dbContext.Recipes.AddAsync(dbRecipe);
+                    dbContext.Recipes.Add(dbRecipe);
                 }
                 dbRecipes.Add(dbRecipe);
             }
         }
-        dbContext.SaveChangesAsync();
+        dbContext.SaveChanges();
 
         StatusUpdated?.Invoke(this, new StatusUpdatedEventArgs
         {
@@ -102,9 +103,9 @@ class RecipeImporter : IImporter
 
             foreach(var ingredientDTO in recipeIngredientDTOs)
             {
-                Item item = dbContext.Items.FirstAsync(i => i.Name == ingredientDTO.ItemDTO.Name).Result;
+                Item item = dbContext.Items.First(i => i.Name == ingredientDTO.ItemDTO.Name);
 
-                var dbIngredient = dbContext.Ingredients.FirstOrDefaultAsync(i => i.ItemId == item.Id && i.RecipeId == recipe.Id).Result;
+                var dbIngredient = dbContext.Ingredients.FirstOrDefault(i => i.ItemId == item.Id && i.RecipeId == recipe.Id);
 
                 if(dbIngredient == null)
                 {
@@ -115,11 +116,11 @@ class RecipeImporter : IImporter
                         Count = ingredientDTO.Count
                     };
 
-                    dbContext.Ingredients.AddAsync(dbIngredient);
+                    dbContext.Ingredients.Add(dbIngredient);
                 }
             }
         }
-        dbContext.SaveChangesAsync();
+        dbContext.SaveChanges();
 
         StatusUpdated?.Invoke(this, new StatusUpdatedEventArgs
         {
