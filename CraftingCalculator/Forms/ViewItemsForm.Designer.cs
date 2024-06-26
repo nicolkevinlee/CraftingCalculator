@@ -28,76 +28,19 @@
         /// </summary>
         private void InitializeComponent()
         {
-            components = new System.ComponentModel.Container();
-            ItemsGridView = new DataGridView();
-            idDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
-            nameDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
-            itemDTOBindingSource = new BindingSource(components);
-            craftingDbContextBindingSource = new BindingSource(components);
-            SearchBox = new TextBox();
             AddButton = new Button();
             EditButton = new Button();
             DeleteButton = new Button();
             CloseButton = new Button();
-            ((System.ComponentModel.ISupportInitialize)ItemsGridView).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)itemDTOBindingSource).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)craftingDbContextBindingSource).BeginInit();
+            ItemPicker = new Controls.ItemPickerControl();
+            tableLayoutPanel1 = new TableLayoutPanel();
+            tableLayoutPanel1.SuspendLayout();
             SuspendLayout();
-            // 
-            // ItemsGridView
-            // 
-            ItemsGridView.AllowUserToAddRows = false;
-            ItemsGridView.AllowUserToDeleteRows = false;
-            ItemsGridView.AllowUserToResizeColumns = false;
-            ItemsGridView.AllowUserToResizeRows = false;
-            ItemsGridView.AutoGenerateColumns = false;
-            ItemsGridView.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            ItemsGridView.Columns.AddRange(new DataGridViewColumn[] { idDataGridViewTextBoxColumn, nameDataGridViewTextBoxColumn });
-            ItemsGridView.DataSource = itemDTOBindingSource;
-            ItemsGridView.Location = new Point(12, 43);
-            ItemsGridView.Name = "ItemsGridView";
-            ItemsGridView.ReadOnly = true;
-            ItemsGridView.RowHeadersVisible = false;
-            ItemsGridView.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            ItemsGridView.Size = new Size(427, 194);
-            ItemsGridView.TabIndex = 0;
-            ItemsGridView.CellClick += ItemsGridView_CellClick;
-            // 
-            // idDataGridViewTextBoxColumn
-            // 
-            idDataGridViewTextBoxColumn.DataPropertyName = "Id";
-            idDataGridViewTextBoxColumn.HeaderText = "Id";
-            idDataGridViewTextBoxColumn.Name = "idDataGridViewTextBoxColumn";
-            idDataGridViewTextBoxColumn.ReadOnly = true;
-            idDataGridViewTextBoxColumn.Width = 50;
-            // 
-            // nameDataGridViewTextBoxColumn
-            // 
-            nameDataGridViewTextBoxColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            nameDataGridViewTextBoxColumn.DataPropertyName = "Name";
-            nameDataGridViewTextBoxColumn.HeaderText = "Name";
-            nameDataGridViewTextBoxColumn.Name = "nameDataGridViewTextBoxColumn";
-            nameDataGridViewTextBoxColumn.ReadOnly = true;
-            // 
-            // itemDTOBindingSource
-            // 
-            itemDTOBindingSource.DataSource = typeof(DTOs.ItemDTO);
-            // 
-            // craftingDbContextBindingSource
-            // 
-            craftingDbContextBindingSource.DataSource = typeof(Data.CraftingDbContext);
-            // 
-            // SearchBox
-            // 
-            SearchBox.Location = new Point(12, 12);
-            SearchBox.Name = "SearchBox";
-            SearchBox.Size = new Size(426, 23);
-            SearchBox.TabIndex = 1;
-            SearchBox.TextChanged += SearchBox_TextChanged;
             // 
             // AddButton
             // 
-            AddButton.Location = new Point(12, 243);
+            AddButton.Anchor = AnchorStyles.None;
+            AddButton.Location = new Point(16, 3);
             AddButton.Name = "AddButton";
             AddButton.Size = new Size(75, 23);
             AddButton.TabIndex = 2;
@@ -107,7 +50,8 @@
             // 
             // EditButton
             // 
-            EditButton.Location = new Point(121, 243);
+            EditButton.Anchor = AnchorStyles.None;
+            EditButton.Location = new Point(123, 3);
             EditButton.Name = "EditButton";
             EditButton.Size = new Size(75, 23);
             EditButton.TabIndex = 3;
@@ -116,7 +60,8 @@
             // 
             // DeleteButton
             // 
-            DeleteButton.Location = new Point(242, 243);
+            DeleteButton.Anchor = AnchorStyles.None;
+            DeleteButton.Location = new Point(230, 3);
             DeleteButton.Name = "DeleteButton";
             DeleteButton.Size = new Size(75, 23);
             DeleteButton.TabIndex = 4;
@@ -126,45 +71,61 @@
             // 
             // CloseButton
             // 
-            CloseButton.Location = new Point(363, 243);
+            CloseButton.Anchor = AnchorStyles.None;
+            CloseButton.Location = new Point(337, 3);
             CloseButton.Name = "CloseButton";
             CloseButton.Size = new Size(75, 23);
             CloseButton.TabIndex = 5;
             CloseButton.Text = "Close";
             CloseButton.UseVisualStyleBackColor = true;
             // 
+            // ItemPicker
+            // 
+            ItemPicker.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            ItemPicker.Location = new Point(12, 12);
+            ItemPicker.Name = "ItemPicker";
+            ItemPicker.Size = new Size(434, 340);
+            ItemPicker.TabIndex = 6;
+            // 
+            // tableLayoutPanel1
+            // 
+            tableLayoutPanel1.Anchor = AnchorStyles.Bottom;
+            tableLayoutPanel1.ColumnCount = 4;
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 25F));
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 25F));
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 25F));
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 25F));
+            tableLayoutPanel1.Controls.Add(AddButton, 0, 0);
+            tableLayoutPanel1.Controls.Add(EditButton, 1, 0);
+            tableLayoutPanel1.Controls.Add(CloseButton, 3, 0);
+            tableLayoutPanel1.Controls.Add(DeleteButton, 2, 0);
+            tableLayoutPanel1.Location = new Point(15, 356);
+            tableLayoutPanel1.Name = "tableLayoutPanel1";
+            tableLayoutPanel1.RowCount = 1;
+            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            tableLayoutPanel1.Size = new Size(428, 30);
+            tableLayoutPanel1.TabIndex = 7;
+            // 
             // ViewItemsForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(451, 354);
-            Controls.Add(CloseButton);
-            Controls.Add(DeleteButton);
-            Controls.Add(EditButton);
-            Controls.Add(AddButton);
-            Controls.Add(SearchBox);
-            Controls.Add(ItemsGridView);
+            ClientSize = new Size(458, 392);
+            Controls.Add(tableLayoutPanel1);
+            Controls.Add(ItemPicker);
             Name = "ViewItemsForm";
             Text = "View Items";
             Load += ViewItemsForm_Load;
-            ((System.ComponentModel.ISupportInitialize)ItemsGridView).EndInit();
-            ((System.ComponentModel.ISupportInitialize)itemDTOBindingSource).EndInit();
-            ((System.ComponentModel.ISupportInitialize)craftingDbContextBindingSource).EndInit();
+            tableLayoutPanel1.ResumeLayout(false);
             ResumeLayout(false);
-            PerformLayout();
         }
 
         #endregion
-
-        private DataGridView ItemsGridView;
-        private BindingSource craftingDbContextBindingSource;
-        private DataGridViewTextBoxColumn idDataGridViewTextBoxColumn;
-        private DataGridViewTextBoxColumn nameDataGridViewTextBoxColumn;
-        private BindingSource itemDTOBindingSource;
-        private TextBox SearchBox;
         private Button AddButton;
         private Button EditButton;
         private Button DeleteButton;
         private Button CloseButton;
+        private Controls.ItemPickerControl ItemPicker;
+        private TableLayoutPanel tableLayoutPanel1;
     }
 }
