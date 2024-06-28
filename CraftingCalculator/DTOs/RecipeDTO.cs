@@ -1,4 +1,6 @@
-﻿namespace CraftingCalculator.DTOs;
+﻿using CraftingCalculator.Models;
+
+namespace CraftingCalculator.DTOs;
 
 public record RecipeDTO
 {
@@ -7,5 +9,6 @@ public record RecipeDTO
     public ushort RecipeLevel { get; set; }
     public CraftTypeDTO CraftTypeDTO { get; set; }
     public ItemDTO ItemDTO { get; set; }
+    public ICollection<IngredientDTO> Ingredients { get; set; }
     public override string ToString() => ItemDTO.Name;
 }

@@ -9,6 +9,8 @@ public partial class CraftingDbContext : DbContext
     public virtual DbSet<Recipe> Recipes { get; set; }
     public virtual DbSet<Ingredient> Ingredients { get; set; }
     public virtual DbSet<CraftType> CraftTypes { get; set; }
+    public virtual DbSet<RecipeList> RecipeLists { get; set; }
+    public virtual DbSet<RecipeListEntry> RecipeListEntries { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
@@ -69,6 +71,24 @@ public partial class CraftingDbContext : DbContext
 
         });
 
+        modelBuilder.Entity<RecipeList>(entity =>
+        {
+            entity.Property(p => p.Id)
+            .ValueGeneratedOnAdd();
+
+            entity.HasMany(e => e.Recipes)
+            .WithOne(e => e.RecipeList)
+            .HasForeignKey(e => e.RecipeListId)
+            .HasPrincipalKey(e => e.Id)
+            .OnDelete(DeleteBehavior.Cascade);
+        });
+
+        modelBuilder.Entity<RecipeListEntry>(entity =>
+        {
+            entity.Property(p => p.Id)
+            .ValueGeneratedOnAdd();
+
+        });
 
 
 

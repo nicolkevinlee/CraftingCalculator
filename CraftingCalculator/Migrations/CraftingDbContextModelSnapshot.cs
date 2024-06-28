@@ -114,6 +114,49 @@ namespace CraftingCalculator.Migrations
                     b.ToTable("Recipes");
                 });
 
+            modelBuilder.Entity("CraftingCalculator.Models.RecipeList", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("RecipeLists");
+                });
+
+            modelBuilder.Entity("CraftingCalculator.Models.RecipeListEntry", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
+
+                    b.Property<long>("Count")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("RecipeId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("RecipeListId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RecipeId");
+
+                    b.HasIndex("RecipeListId");
+
+                    b.ToTable("RecipeListEntries");
+                });
+
             modelBuilder.Entity("CraftingCalculator.Models.Ingredient", b =>
                 {
                     b.HasOne("CraftingCalculator.Models.Item", "Item")
@@ -152,6 +195,25 @@ namespace CraftingCalculator.Migrations
                     b.Navigation("Item");
                 });
 
+            modelBuilder.Entity("CraftingCalculator.Models.RecipeListEntry", b =>
+                {
+                    b.HasOne("CraftingCalculator.Models.Recipe", "Recipe")
+                        .WithMany()
+                        .HasForeignKey("RecipeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("CraftingCalculator.Models.RecipeList", "RecipeList")
+                        .WithMany("Recipes")
+                        .HasForeignKey("RecipeListId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Recipe");
+
+                    b.Navigation("RecipeList");
+                });
+
             modelBuilder.Entity("CraftingCalculator.Models.CraftType", b =>
                 {
                     b.Navigation("Recipes");
@@ -165,6 +227,11 @@ namespace CraftingCalculator.Migrations
             modelBuilder.Entity("CraftingCalculator.Models.Recipe", b =>
                 {
                     b.Navigation("Ingredients");
+                });
+
+            modelBuilder.Entity("CraftingCalculator.Models.RecipeList", b =>
+                {
+                    b.Navigation("Recipes");
                 });
 #pragma warning restore 612, 618
         }

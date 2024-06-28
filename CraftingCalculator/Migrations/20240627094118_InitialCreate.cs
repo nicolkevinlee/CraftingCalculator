@@ -37,6 +37,19 @@ namespace CraftingCalculator.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "RecipeLists",
+                columns: table => new
+                {
+                    Id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_RecipeLists", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Recipes",
                 columns: table => new
                 {
@@ -90,6 +103,33 @@ namespace CraftingCalculator.Migrations
                         principalColumn: "Id");
                 });
 
+            migrationBuilder.CreateTable(
+                name: "RecipeListEntries",
+                columns: table => new
+                {
+                    Id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Count = table.Column<long>(type: "bigint", nullable: false),
+                    RecipeListId = table.Column<long>(type: "bigint", nullable: false),
+                    RecipeId = table.Column<long>(type: "bigint", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_RecipeListEntries", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_RecipeListEntries_RecipeLists_RecipeListId",
+                        column: x => x.RecipeListId,
+                        principalTable: "RecipeLists",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_RecipeListEntries_Recipes_RecipeId",
+                        column: x => x.RecipeId,
+                        principalTable: "Recipes",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_Ingredients_ItemId",
                 table: "Ingredients",
@@ -99,6 +139,16 @@ namespace CraftingCalculator.Migrations
                 name: "IX_Ingredients_RecipeId",
                 table: "Ingredients",
                 column: "RecipeId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_RecipeListEntries_RecipeId",
+                table: "RecipeListEntries",
+                column: "RecipeId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_RecipeListEntries_RecipeListId",
+                table: "RecipeListEntries",
+                column: "RecipeListId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Recipes_CraftTypeId",
@@ -116,6 +166,12 @@ namespace CraftingCalculator.Migrations
         {
             migrationBuilder.DropTable(
                 name: "Ingredients");
+
+            migrationBuilder.DropTable(
+                name: "RecipeListEntries");
+
+            migrationBuilder.DropTable(
+                name: "RecipeLists");
 
             migrationBuilder.DropTable(
                 name: "Recipes");
