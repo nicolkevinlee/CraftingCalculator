@@ -326,6 +326,7 @@ partial class MainForm
         SaveButton.TabIndex = 3;
         SaveButton.Text = "Save";
         SaveButton.UseVisualStyleBackColor = true;
+        SaveButton.Click += SaveButton_Click;
         // 
         // RecipeListEntryGridView
         // 

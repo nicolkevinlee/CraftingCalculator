@@ -1,5 +1,6 @@
 using CraftingCalculator.Data;
 using CraftingCalculator.DTOs;
+using CraftingCalculator.Models;
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel;
 
@@ -272,5 +273,45 @@ public partial class MainForm : Form
         SubRecipeListGridView.ClearSelection();
         TotalIngredientsListView.ClearSelection();
         TotalShardsGridView.ClearSelection();
+    }
+
+    private void SaveButton_Click(object sender, EventArgs e)
+    {
+        var listName = ListNameTextBox.Text.Trim();
+
+        if (string.IsNullOrEmpty(listName) || _recipeListEntries.Count == 0)
+        {
+            return;
+        }
+
+        RecipeList recipeList = new RecipeList
+        {
+            Name = listName
+        };
+
+        List<RecipeListEntry> entries = new List<RecipeListEntry>(_recipeListEntries.Count);
+
+        foreach (var entry in _recipeListEntries)
+        {
+            RecipeListEntry recipeListEntry = new RecipeListEntry
+            {
+                Count = entry.Count,
+                RecipeId = entry.RecipeDTO.Id
+            };
+            entries.Add(recipeListEntry);
+        }
+
+        using(var dbContext = new CraftingDbContext())
+        {
+            dbContext.RecipeLists.Add(recipeList);
+            dbContext.SaveChanges();
+
+            foreach(var entry in entries)
+            {
+                entry.RecipeListId = recipeList.Id;
+                dbContext.RecipeListEntries.Add(entry);
+            }
+            dbContext.SaveChanges();
+        }
     }
 }
