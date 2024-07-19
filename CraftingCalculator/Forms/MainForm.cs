@@ -301,17 +301,23 @@ public partial class MainForm : Form
             entries.Add(recipeListEntry);
         }
 
-        using(var dbContext = new CraftingDbContext())
+        using (var dbContext = new CraftingDbContext())
         {
             dbContext.RecipeLists.Add(recipeList);
             dbContext.SaveChanges();
 
-            foreach(var entry in entries)
+            foreach (var entry in entries)
             {
                 entry.RecipeListId = recipeList.Id;
                 dbContext.RecipeListEntries.Add(entry);
             }
             dbContext.SaveChanges();
         }
+    }
+
+    private void LoadButton_Click(object sender, EventArgs e)
+    {
+        var listSelectorForm = new ListSelectorForm();
+        listSelectorForm.ShowDialog();
     }
 }

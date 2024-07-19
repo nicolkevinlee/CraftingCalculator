@@ -315,6 +315,7 @@ partial class MainForm
         LoadButton.TabIndex = 2;
         LoadButton.Text = "Load";
         LoadButton.UseVisualStyleBackColor = true;
+        LoadButton.Click += LoadButton_Click;
         // 
         // SaveButton
         // 
