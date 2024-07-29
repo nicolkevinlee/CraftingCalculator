@@ -170,6 +170,7 @@ partial class MainForm
         TotalShardsGridView.RowHeadersVisible = false;
         TotalShardsGridView.Size = new Size(554, 105);
         TotalShardsGridView.TabIndex = 11;
+        TotalShardsGridView.SelectionChanged += GridView_SelectionChanged;
         // 
         // nameDataGridViewTextBoxColumn
         // 
@@ -250,6 +251,7 @@ partial class MainForm
         SubRecipeListGridView.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
         SubRecipeListGridView.Size = new Size(554, 104);
         SubRecipeListGridView.TabIndex = 10;
+        SubRecipeListGridView.SelectionChanged += GridView_SelectionChanged;
         // 
         // dataGridViewTextBoxColumn1
         // 
@@ -279,7 +281,7 @@ partial class MainForm
         label4.Name = "label4";
         label4.Size = new Size(554, 30);
         label4.TabIndex = 7;
-        label4.Text = "Sub Crafts";
+        label4.Text = "Precrafts";
         label4.TextAlign = ContentAlignment.MiddleLeft;
         // 
         // AddButton
@@ -304,6 +306,7 @@ partial class MainForm
         RemoveButton.TabIndex = 1;
         RemoveButton.Text = "Remove";
         RemoveButton.UseVisualStyleBackColor = true;
+        RemoveButton.Click += RemoveButton_Click;
         // 
         // LoadButton
         // 
@@ -341,12 +344,15 @@ partial class MainForm
         RecipeListEntryGridView.Columns.AddRange(new DataGridViewColumn[] { recipeDTODataGridViewTextBoxColumn1, countDataGridViewTextBoxColumn1 });
         tableLayoutPanel1.SetColumnSpan(RecipeListEntryGridView, 6);
         RecipeListEntryGridView.DataSource = recipeListEntryDTOBindingSource;
+        RecipeListEntryGridView.EditMode = DataGridViewEditMode.EditProgrammatically;
         RecipeListEntryGridView.Location = new Point(3, 63);
         RecipeListEntryGridView.Name = "RecipeListEntryGridView";
+        RecipeListEntryGridView.ReadOnly = true;
         RecipeListEntryGridView.RowHeadersVisible = false;
         RecipeListEntryGridView.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
         RecipeListEntryGridView.Size = new Size(554, 104);
         RecipeListEntryGridView.TabIndex = 4;
+        RecipeListEntryGridView.CellClick += RecipeListEntryGridView_CellClick;
         // 
         // recipeDTODataGridViewTextBoxColumn1
         // 
@@ -354,12 +360,14 @@ partial class MainForm
         recipeDTODataGridViewTextBoxColumn1.DataPropertyName = "RecipeDTO";
         recipeDTODataGridViewTextBoxColumn1.HeaderText = "Recipe";
         recipeDTODataGridViewTextBoxColumn1.Name = "recipeDTODataGridViewTextBoxColumn1";
+        recipeDTODataGridViewTextBoxColumn1.ReadOnly = true;
         // 
         // countDataGridViewTextBoxColumn1
         // 
         countDataGridViewTextBoxColumn1.DataPropertyName = "Count";
         countDataGridViewTextBoxColumn1.HeaderText = "Total";
         countDataGridViewTextBoxColumn1.Name = "countDataGridViewTextBoxColumn1";
+        countDataGridViewTextBoxColumn1.ReadOnly = true;
         countDataGridViewTextBoxColumn1.Width = 75;
         // 
         // label2
@@ -415,6 +423,7 @@ partial class MainForm
         TotalIngredientsListView.RowHeadersVisible = false;
         TotalIngredientsListView.Size = new Size(554, 111);
         TotalIngredientsListView.TabIndex = 5;
+        TotalIngredientsListView.SelectionChanged += GridView_SelectionChanged;
         // 
         // itemDTODataGridViewTextBoxColumn
         // 
