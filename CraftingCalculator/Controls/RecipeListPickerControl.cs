@@ -10,7 +10,7 @@ public partial class RecipeListPickerControl : UserControl
     private BindingList<RecipeList> _filteredLists;
     private List<RecipeList>? _allLists;
     private RecipeList? _selectedList;
-    public event EventHandler<RecipeListSelectedEventArgs> RecipeListSelected;
+    public event EventHandler<RecipeListControlSelectedEventArgs> RecipeListSelected;
 
     public RecipeListPickerControl()
     {
@@ -48,7 +48,7 @@ public partial class RecipeListPickerControl : UserControl
     private void ListGridView_CellClick(object sender, DataGridViewCellEventArgs e)
     {
         _selectedList = _filteredLists[e.RowIndex];
-        RecipeListSelected?.Invoke(this, new RecipeListSelectedEventArgs()
+        RecipeListSelected?.Invoke(this, new RecipeListControlSelectedEventArgs()
         {
             SelectedRecipeList = _selectedList
         });
@@ -83,7 +83,7 @@ public partial class RecipeListPickerControl : UserControl
     }
 }
 
-public class RecipeListSelectedEventArgs : EventArgs
+public class RecipeListControlSelectedEventArgs : EventArgs
 {
     public RecipeList? SelectedRecipeList { get; set; }
 }

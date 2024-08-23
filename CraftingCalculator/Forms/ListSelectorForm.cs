@@ -25,9 +25,10 @@ namespace CraftingCalculator.Forms
         private void ListSelectorForm_Load(object sender, EventArgs e)
         {
             RecipeListControl.LoadLists();
+            RecipeListControl.RecipeListSelected += RecipeListSelected;
         }
 
-        private void RecipeListSelected(object sender, RecipeListSelectedEventArgs e)
+        private void RecipeListSelected(object sender, RecipeListControlSelectedEventArgs e)
         {
             _selectedRecipeList = e.SelectedRecipeList;
         }

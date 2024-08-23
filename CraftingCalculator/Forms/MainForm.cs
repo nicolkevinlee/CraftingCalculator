@@ -317,6 +317,7 @@ public partial class MainForm : Form
     private void LoadButton_Click(object sender, EventArgs e)
     {
         var listSelectorForm = new ListSelectorForm();
+        listSelectorForm.ListSelected += RecipeListSelected;
         listSelectorForm.ShowDialog();
     }
 
@@ -346,8 +347,35 @@ public partial class MainForm : Form
         }
     }
 
-    private void RecipeListSelectedEventArgs(object sender, RecipeListSelectedEventArgs e)
+    private void RecipeListSelected(object sender, RecipeListSelectedEventArgs e)
     {
+        _currentRecipeListDTO = (RecipeListDTO)e.SelectedRecipeList!;
 
+        _recipeListEntries.Clear();
+
+        using (var dbContext = new CraftingDbContext())
+        {
+            var recipeListEntryDTOs = dbContext.RecipeListEntries.Where(e => e.RecipeListId == _currentRecipeListDTO.Id)
+                .Include(e => e.RecipeList)
+                .Include(e => e.Recipe)
+                .Include(e => e.Recipe.CraftType)
+                .Include(e => e.Recipe.Item).ToList().Select(e=>(RecipeListEntryDTO)e);
+
+            foreach (var entry in recipeListEntryDTOs)
+            {
+                var ingredients = dbContext.Ingredients.Where(i => i.RecipeId == entry.RecipeDTO.Id)
+                    .Include(i => i.Recipe)
+                    .Include(i => i.Item)
+                    .Select(i => (IngredientDTO)i).ToList();
+                entry.RecipeDTO.Ingredients = ingredients;
+                _recipeListEntries.Add(entry);
+            }
+
+        }
+
+        RecipeListEntryGridView.Update();
+        RecipeListEntryGridView.Refresh();
+
+        CalculateTotalIngredients();
     }
 }
