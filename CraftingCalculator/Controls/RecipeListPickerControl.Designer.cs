@@ -31,8 +31,8 @@
             components = new System.ComponentModel.Container();
             SearchTextBox = new TextBox();
             ListGridView = new DataGridView();
-            nameDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
             recipeListBindingSource = new BindingSource(components);
+            nameDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)ListGridView).BeginInit();
             ((System.ComponentModel.ISupportInitialize)recipeListBindingSource).BeginInit();
             SuspendLayout();
@@ -47,6 +47,10 @@
             // 
             // ListGridView
             // 
+            ListGridView.AllowUserToAddRows = false;
+            ListGridView.AllowUserToDeleteRows = false;
+            ListGridView.AllowUserToResizeColumns = false;
+            ListGridView.AllowUserToResizeRows = false;
             ListGridView.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             ListGridView.AutoGenerateColumns = false;
             ListGridView.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
@@ -63,6 +67,10 @@
             ListGridView.TabIndex = 1;
             ListGridView.CellClick += ListGridView_CellClick;
             // 
+            // recipeListBindingSource
+            // 
+            recipeListBindingSource.DataSource = typeof(Models.RecipeList);
+            // 
             // nameDataGridViewTextBoxColumn
             // 
             nameDataGridViewTextBoxColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
@@ -70,10 +78,6 @@
             nameDataGridViewTextBoxColumn.HeaderText = "Name";
             nameDataGridViewTextBoxColumn.Name = "nameDataGridViewTextBoxColumn";
             nameDataGridViewTextBoxColumn.ReadOnly = true;
-            // 
-            // recipeListBindingSource
-            // 
-            recipeListBindingSource.DataSource = typeof(Models.RecipeList);
             // 
             // RecipeListPickerControl
             // 
@@ -93,7 +97,7 @@
 
         private TextBox SearchTextBox;
         private DataGridView ListGridView;
-        private DataGridViewTextBoxColumn nameDataGridViewTextBoxColumn;
         private BindingSource recipeListBindingSource;
+        private DataGridViewTextBoxColumn nameDataGridViewTextBoxColumn;
     }
 }

@@ -16,10 +16,12 @@ public partial class MainForm : Form
     private BindingList<TotalShards> _totalShards;
 
     private RecipeListEntryDTO? _selectedRecipeListEntryDTO;
+    private RecipeListDTO? _currentRecipeListDTO;
 
     public MainForm()
     {
         _selectedRecipeListEntryDTO = null;
+        _currentRecipeListDTO = null;
         _recipeListEntries = new BindingList<RecipeListEntryDTO>();
         _subRecipeEntries = new BindingList<RecipeListEntryDTO>();
         _totalIngredients = new BindingList<TotalIngredient>();
@@ -71,18 +73,10 @@ public partial class MainForm : Form
 
             using (var dbContext = new CraftingDbContext())
             {
-                var ingredients = dbContext.Ingredients.Where(i => i.RecipeId == recipeListEntry.RecipeDTO.Id).Select(i =>
-                    new IngredientDTO
-                    {
-                        Id = i.Id,
-                        RecipeDTO = e.SelectedRecipe,
-                        ItemDTO = new ItemDTO
-                        {
-                            Id = i.ItemId,
-                            Name = i.Item.Name
-                        },
-                        Count = i.Count
-                    }).ToList();
+                var ingredients = dbContext.Ingredients.Include(i=>i.Recipe)
+                                                       .Include(i=>i.Item)
+                                                       .Where(i => i.RecipeId == recipeListEntry.RecipeDTO.Id)
+                                                       .Select(i => (IngredientDTO)i).ToList();
                 recipeListEntry.RecipeDTO.Ingredients = ingredients;
             }
 
@@ -98,7 +92,6 @@ public partial class MainForm : Form
 
         CalculateTotalIngredients();
     }
-
 
     private void CalculateTotalIngredients()
     {
@@ -305,17 +298,7 @@ public partial class MainForm : Form
             Name = listName
         };
 
-        List<RecipeListEntry> entries = new List<RecipeListEntry>(_recipeListEntries.Count);
-
-        foreach (var entry in _recipeListEntries)
-        {
-            RecipeListEntry recipeListEntry = new RecipeListEntry
-            {
-                Count = entry.Count,
-                RecipeId = entry.RecipeDTO.Id
-            };
-            entries.Add(recipeListEntry);
-        }
+        List<RecipeListEntry> entries = _recipeListEntries.Select(e => (RecipeListEntry)e).ToList();
 
         using (var dbContext = new CraftingDbContext())
         {
@@ -361,5 +344,10 @@ public partial class MainForm : Form
             RecipeListEntryGridView.ClearSelection();
             CalculateTotalIngredients();
         }
+    }
+
+    private void RecipeListSelectedEventArgs(object sender, RecipeListSelectedEventArgs e)
+    {
+
     }
 }

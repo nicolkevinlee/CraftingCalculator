@@ -28,6 +28,7 @@ public partial class RecipeListPickerControl : UserControl
         }
         RefreshList();
         ListGridView.DataSource = _filteredLists;
+        ListGridView.ClearSelection();
     }
 
 
@@ -41,6 +42,7 @@ public partial class RecipeListPickerControl : UserControl
             _allLists = dbContext.RecipeLists.ToList();
         }
         RefreshList();
+        ListGridView.ClearSelection();
     }
 
     private void ListGridView_CellClick(object sender, DataGridViewCellEventArgs e)

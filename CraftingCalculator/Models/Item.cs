@@ -1,4 +1,6 @@
-﻿namespace CraftingCalculator.Models;
+﻿using CraftingCalculator.DTOs;
+
+namespace CraftingCalculator.Models;
 
 public class Item
 {
@@ -6,4 +8,15 @@ public class Item
     public required string Name { get; set; }
     public ICollection<Recipe> Recipes { get; }
 
+    public static explicit operator Item(ItemDTO itemDTO)
+    {
+        if (itemDTO == null) return null;
+
+        var item = new Item()
+        {
+            Id = itemDTO.Id,
+            Name = itemDTO.Name
+        };
+        return item;
+    }
 }

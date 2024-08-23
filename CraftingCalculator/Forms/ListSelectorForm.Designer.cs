@@ -30,7 +30,7 @@
         {
             recipeListPickerControl1 = new Controls.RecipeListPickerControl();
             RecipeListControl = new Controls.RecipeListPickerControl();
-            button1 = new Button();
+            LoadButton = new Button();
             SuspendLayout();
             // 
             // recipeListPickerControl1
@@ -48,22 +48,23 @@
             RecipeListControl.Size = new Size(461, 341);
             RecipeListControl.TabIndex = 1;
             // 
-            // button1
+            // LoadButton
             // 
-            button1.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
-            button1.Location = new Point(398, 359);
-            button1.Name = "button1";
-            button1.Size = new Size(75, 23);
-            button1.TabIndex = 2;
-            button1.Text = "Load";
-            button1.UseVisualStyleBackColor = true;
+            LoadButton.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+            LoadButton.Location = new Point(398, 359);
+            LoadButton.Name = "LoadButton";
+            LoadButton.Size = new Size(75, 23);
+            LoadButton.TabIndex = 2;
+            LoadButton.Text = "Load";
+            LoadButton.UseVisualStyleBackColor = true;
+            LoadButton.Click += LoadButton_Click;
             // 
             // ListSelectorForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(485, 391);
-            Controls.Add(button1);
+            Controls.Add(LoadButton);
             Controls.Add(RecipeListControl);
             Controls.Add(recipeListPickerControl1);
             Name = "ListSelectorForm";
@@ -76,6 +77,6 @@
 
         private Controls.RecipeListPickerControl recipeListPickerControl1;
         private Controls.RecipeListPickerControl RecipeListControl;
-        private Button button1;
+        private Button LoadButton;
     }
 }

@@ -244,9 +244,9 @@ partial class MainForm
         SubRecipeListGridView.Columns.AddRange(new DataGridViewColumn[] { dataGridViewTextBoxColumn1, dataGridViewTextBoxColumn2 });
         tableLayoutPanel1.SetColumnSpan(SubRecipeListGridView, 6);
         SubRecipeListGridView.DataSource = recipeListEntryDTOBindingSource;
-        SubRecipeListGridView.Enabled = false;
         SubRecipeListGridView.Location = new Point(3, 203);
         SubRecipeListGridView.Name = "SubRecipeListGridView";
+        SubRecipeListGridView.ReadOnly = true;
         SubRecipeListGridView.RowHeadersVisible = false;
         SubRecipeListGridView.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
         SubRecipeListGridView.Size = new Size(554, 104);
@@ -259,12 +259,14 @@ partial class MainForm
         dataGridViewTextBoxColumn1.DataPropertyName = "RecipeDTO";
         dataGridViewTextBoxColumn1.HeaderText = "Recipe";
         dataGridViewTextBoxColumn1.Name = "dataGridViewTextBoxColumn1";
+        dataGridViewTextBoxColumn1.ReadOnly = true;
         // 
         // dataGridViewTextBoxColumn2
         // 
         dataGridViewTextBoxColumn2.DataPropertyName = "Count";
         dataGridViewTextBoxColumn2.HeaderText = "Total";
         dataGridViewTextBoxColumn2.Name = "dataGridViewTextBoxColumn2";
+        dataGridViewTextBoxColumn2.ReadOnly = true;
         dataGridViewTextBoxColumn2.Width = 75;
         // 
         // recipeListEntryDTOBindingSource
@@ -416,7 +418,6 @@ partial class MainForm
         TotalIngredientsListView.Columns.AddRange(new DataGridViewColumn[] { itemDTODataGridViewTextBoxColumn, countDataGridViewTextBoxColumn });
         tableLayoutPanel1.SetColumnSpan(TotalIngredientsListView, 6);
         TotalIngredientsListView.DataSource = totalIngredientBindingSource;
-        TotalIngredientsListView.Enabled = false;
         TotalIngredientsListView.Location = new Point(3, 343);
         TotalIngredientsListView.Name = "TotalIngredientsListView";
         TotalIngredientsListView.ReadOnly = true;

@@ -1,4 +1,6 @@
-﻿namespace CraftingCalculator.Models;
+﻿using CraftingCalculator.DTOs;
+
+namespace CraftingCalculator.Models;
 
 public class Recipe
 {
@@ -10,4 +12,32 @@ public class Recipe
     public uint ItemId { get; set; }
     public virtual Item Item { get; set; }
     public ICollection<Ingredient> Ingredients { get; }
+
+    public static explicit operator Recipe(RecipeDTO recipeDTO)
+    {
+        if (recipeDTO == null) return null;
+
+        var recipe = new Recipe();
+
+        recipe.Id = recipeDTO.Id;
+        recipe.Yield = recipeDTO.Yield;
+        recipe.RecipeLevel = recipeDTO.RecipeLevel;
+
+        if(recipeDTO.CraftTypeDTO != null)
+        {
+            var craftTypeDTO = recipeDTO.CraftTypeDTO;
+            recipe.CraftTypeId = craftTypeDTO.Id;
+            recipe.CraftType = (CraftType)craftTypeDTO;
+        }
+
+        if (recipeDTO.ItemDTO != null)
+        {
+            var itemDTO = recipeDTO.ItemDTO;
+            recipe.ItemId = itemDTO.Id;
+            recipe.Item = (Item)itemDTO;
+        }
+
+        return recipe;
+
+    }
 }
