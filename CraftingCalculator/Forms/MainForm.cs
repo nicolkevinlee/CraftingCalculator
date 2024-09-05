@@ -67,6 +67,7 @@ public partial class MainForm : Form
             recipeListEntry = new RecipeListEntryDTO
             {
                 Id = 0,
+                RecipeListDTO = (_currentRecipeListDTO != null)? _currentRecipeListDTO : null,
                 RecipeDTO = e.SelectedRecipe,
                 Count = e.Count
             };
@@ -286,6 +287,21 @@ public partial class MainForm : Form
 
     private void SaveButton_Click(object sender, EventArgs e)
     {
+        
+        if(_currentRecipeListDTO == null)
+        {
+            SaveNewRecipeList();
+        }
+        else
+        {
+            OverwriteRecipeList();
+        }
+
+    }
+
+    private void SaveNewRecipeList()
+    {
+
         var listName = ListNameTextBox.Text.Trim();
 
         if (string.IsNullOrEmpty(listName) || _recipeListEntries.Count == 0)
@@ -312,6 +328,61 @@ public partial class MainForm : Form
             }
             dbContext.SaveChanges();
         }
+    }
+
+    private void OverwriteRecipeList()
+    {
+        if (_currentRecipeListDTO == null) return;
+
+        var listName = ListNameTextBox.Text.Trim();
+
+        if (string.IsNullOrEmpty(listName) || _recipeListEntries.Count == 0)
+        {
+            return;
+        }
+
+        _currentRecipeListDTO.Name = listName;
+
+        using (var dbContext = new CraftingDbContext())
+        {
+            var currentEntries = dbContext.RecipeListEntries.Where(e => e.RecipeListId == _currentRecipeListDTO.Id).ToList();
+
+            var toUpdate = currentEntries.Where(e => _recipeListEntries.Any(f => f.Id == e.Id)).ToList();
+            var toDelete = currentEntries.Where(e => !_recipeListEntries.Any(f => f.Id == e.Id)).ToList();
+
+            if (toUpdate != null && toUpdate.Count() > 0)
+            {
+                dbContext.RecipeListEntries.UpdateRange(toUpdate);
+                dbContext.SaveChanges();
+            }
+            if (toDelete != null && toDelete.Count() > 0)
+            {
+                dbContext.RecipeListEntries.RemoveRange(toDelete);
+                dbContext.SaveChanges();
+            }
+
+            List<RecipeListEntry> toAdd = _recipeListEntries.Select(e => (RecipeListEntry)e).ToList();
+            if (toUpdate != null)
+            {
+                toAdd = toAdd.Where(e => !toUpdate.Any(f => f.Id == e.Id)).Select(e =>
+                    new RecipeListEntry
+                    {
+                        Id = e.Id,
+                        Count = e.Count,
+                        RecipeId = e.RecipeId,
+                        RecipeListId = e.RecipeListId
+                    }).ToList();
+            }
+
+            if(toAdd != null && toAdd.Count > 0)
+            {
+                dbContext.RecipeListEntries.AddRange(toAdd);
+                dbContext.SaveChanges();
+            }
+
+        }
+
+
     }
 
     private void LoadButton_Click(object sender, EventArgs e)
@@ -372,6 +443,7 @@ public partial class MainForm : Form
             }
 
         }
+        ListNameTextBox.Text = _currentRecipeListDTO.Name;
 
         RecipeListEntryGridView.Update();
         RecipeListEntryGridView.Refresh();
