@@ -1,6 +1,7 @@
 ﻿using CraftingCalculator.DTOs;
 using CraftingCalculator.Models;
-using Microsoft.EntityFrameworkCore;
+using System;
+using System.Threading;
 
 namespace CraftingCalculator.Data;
 
@@ -9,19 +10,32 @@ class RecipeImporter : IImporter
 
     public event EventHandler<StatusUpdatedEventArgs> StatusUpdated;
 
-    public void ImportRecipesToDb(List<ItemDTO> itemDTOs, List<CraftTypeDTO> craftTypeDTOs, List<RecipeDTO> recipeDTOs, List<IngredientDTO> ingredientDTOs)
+    public Task ImportRecipesToDb(List<ItemDTO> itemDTOs, List<CraftTypeDTO> craftTypeDTOs, List<RecipeDTO> recipeDTOs, List<IngredientDTO> ingredientDTOs)
     {
-        using (var dbContext = new CraftingDbContext())
+        var progressHandler = new Progress<StatusUpdatedEventArgs>(InvokeStatusUpdate);
+        var progress = progressHandler as IProgress<StatusUpdatedEventArgs>;
+        var task = new Task(() =>
         {
-            SaveItemsToDb(dbContext, itemDTOs);
-            SaveCraftTypesToDb(dbContext, craftTypeDTOs);
-            SaveRecipesToDb(dbContext, recipeDTOs, ingredientDTOs);
+            using (var dbContext = new CraftingDbContext())
+            {
+                SaveItemsToDb(progress, dbContext, itemDTOs);
+                SaveCraftTypesToDb(progress, dbContext, craftTypeDTOs);
+                SaveRecipesToDb(progress, dbContext, recipeDTOs, ingredientDTOs);
+            }
         }
+        );
+        task.Start();
+        return task;
     }
 
-    private void SaveItemsToDb(CraftingDbContext dbContext, List<ItemDTO> itemDTOs)
+    private void InvokeStatusUpdate(StatusUpdatedEventArgs e)
     {
-        StatusUpdated?.Invoke(this, new StatusUpdatedEventArgs
+        StatusUpdated?.Invoke(this, e);
+    }
+
+    private void SaveItemsToDb(IProgress<StatusUpdatedEventArgs> progress, CraftingDbContext dbContext, List<ItemDTO> itemDTOs)
+    {
+        progress.Report(new StatusUpdatedEventArgs
         {
             IsComplete = false,
             Progress = "Items"
@@ -38,13 +52,14 @@ class RecipeImporter : IImporter
         
     }
 
-    private void SaveCraftTypesToDb(CraftingDbContext dbContext, List<CraftTypeDTO> craftTypeDTOs)
+    private void SaveCraftTypesToDb(IProgress<StatusUpdatedEventArgs> progress, CraftingDbContext dbContext, List<CraftTypeDTO> craftTypeDTOs)
     {
-        StatusUpdated?.Invoke(this, new StatusUpdatedEventArgs
+        progress.Report(new StatusUpdatedEventArgs
         {
             IsComplete = false,
-            Progress = "CraftTypes"
+            Progress = "Craft Types"
         });
+
         foreach (var type in craftTypeDTOs)
         {
             if (!dbContext.CraftTypes.Any(t => t.Name == type.Name))
@@ -55,9 +70,9 @@ class RecipeImporter : IImporter
         dbContext.SaveChanges();
     }
 
-    private void SaveRecipesToDb(CraftingDbContext dbContext, List<RecipeDTO> recipeDTOs, List<IngredientDTO> ingredientDTOs)
+    private void SaveRecipesToDb(IProgress<StatusUpdatedEventArgs> progress, CraftingDbContext dbContext, List<RecipeDTO> recipeDTOs, List<IngredientDTO> ingredientDTOs)
     {
-        StatusUpdated?.Invoke(this, new StatusUpdatedEventArgs
+        progress.Report(new StatusUpdatedEventArgs
         {
             IsComplete = false,
             Progress = "Recipes"
@@ -88,7 +103,7 @@ class RecipeImporter : IImporter
         }
         dbContext.SaveChanges();
 
-        StatusUpdated?.Invoke(this, new StatusUpdatedEventArgs
+        progress.Report(new StatusUpdatedEventArgs
         {
             IsComplete = false,
             Progress = "Ingredients"
@@ -122,7 +137,7 @@ class RecipeImporter : IImporter
         }
         dbContext.SaveChanges();
 
-        StatusUpdated?.Invoke(this, new StatusUpdatedEventArgs
+        progress.Report(new StatusUpdatedEventArgs
         {
             IsComplete = true,
             Progress = "Complete"
