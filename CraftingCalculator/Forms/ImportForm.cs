@@ -56,18 +56,22 @@ namespace CraftingCalculator.Forms
 
             var csvDataAccessor = new CSVDataAccessor();
             var recipeParser = new RecipeParser();
-            var recipeImporter = new RecipeImporter();
             var csvData = csvDataAccessor.Read(_filePath);
 
-            recipeImporter.StatusUpdated += ImportUpdated;
 
             StatusLabel.Visible = true;
             StatusLabel.Text = "Parsing CSV Data...";
 
-            var result = recipeParser.ParseCsvData(csvData);
+            var task = recipeParser.ParseCsvData(csvData, OnParseComplete);
 
+        }
+
+        private void OnParseComplete(ParseResult result)
+        {
+
+            var recipeImporter = new RecipeImporter();
+            recipeImporter.StatusUpdated += ImportUpdated;
             recipeImporter.ImportRecipesToDb(result.ItemDTOs, result.CraftTypeDTOs, result.RecipeDTOs, result.IngredientDTOs);
-
         }
 
         private void ImportUpdated(object sender, StatusUpdatedEventArgs e)
