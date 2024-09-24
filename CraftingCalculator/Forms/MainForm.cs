@@ -104,170 +104,125 @@ public partial class MainForm : Form
             totalShard.Clear();
         }
 
+        var dbController = new DatabaseController();
 
-        using (var dbContext = new CraftingDbContext())
+        foreach (var recipeEntry in _recipeListEntries)
         {
-            foreach (var recipeEntry in _recipeListEntries)
-            {
-                var recipe = recipeEntry.RecipeDTO;
-                var ingredients = recipeEntry.RecipeDTO.Ingredients;
-                var totalCount = (decimal)recipeEntry.Count;
-                var yield = (decimal)recipe.Yield;
-                var numberOfCrafts = (ushort)Math.Ceiling(totalCount / yield);
+            var recipe = recipeEntry.RecipeDTO;
+            var ingredients = recipeEntry.RecipeDTO.Ingredients;
+            var totalCount = (decimal)recipeEntry.Count;
+            var yield = (decimal)recipe.Yield;
+            var numberOfCrafts = (ushort)Math.Ceiling(totalCount / yield);
 
-                foreach (var ingredient in ingredients)
+            foreach (var ingredient in ingredients)
+            {
+                var recipeDTO = dbController.GetRecipe(ingredient.ItemDTO.Id);
+                if (recipeDTO == null)
                 {
-                    var recipeDTO = GetRecipe(dbContext, ingredient.ItemDTO.Id);
-                    if (recipeDTO == null)
+                    var totalIngredient = _totalIngredients.FirstOrDefault(i => i.ItemDTO.Id == ingredient.ItemDTO.Id);
+                    if (totalIngredient == null)
                     {
-                        var totalIngredient = _totalIngredients.FirstOrDefault(i => i.ItemDTO.Id == ingredient.ItemDTO.Id);
-                        if (totalIngredient == null)
+                        totalIngredient = new TotalIngredient
                         {
-                            totalIngredient = new TotalIngredient
-                            {
-                                Id = ingredient.Id,
-                                ItemDTO = ingredient.ItemDTO,
-                                Count = 0
-                            };
-                            _totalIngredients.Add(totalIngredient);
-                        }
-                        totalIngredient.Count += (ushort)(numberOfCrafts * ingredient.Count);
+                            Id = ingredient.Id,
+                            ItemDTO = ingredient.ItemDTO,
+                            Count = 0
+                        };
+                        _totalIngredients.Add(totalIngredient);
                     }
-                    else
+                    totalIngredient.Count += (ushort)(numberOfCrafts * ingredient.Count);
+                }
+                else
+                {
+                    var subRecipeEntry = _subRecipeEntries.FirstOrDefault(r => r.RecipeDTO.Id == recipeDTO.Id);
+                    if (subRecipeEntry == null)
                     {
-                        var subRecipeEntry = _subRecipeEntries.FirstOrDefault(r => r.RecipeDTO.Id == recipeDTO.Id);
-                        if (subRecipeEntry == null)
+                        subRecipeEntry = new RecipeListEntryDTO
                         {
-                            subRecipeEntry = new RecipeListEntryDTO
-                            {
-                                Id = 0,
-                                RecipeDTO = recipeDTO,
-                                Count = 0
-                            };
-                            _subRecipeEntries.Add(subRecipeEntry);
-                        }
-                        subRecipeEntry.Count += (ushort)(numberOfCrafts * ingredient.Count);
+                            Id = 0,
+                            RecipeDTO = recipeDTO,
+                            Count = 0
+                        };
+                        _subRecipeEntries.Add(subRecipeEntry);
                     }
+                    subRecipeEntry.Count += (ushort)(numberOfCrafts * ingredient.Count);
                 }
             }
-
-            for (int i = 0; i < _subRecipeEntries.Count; i++)
-            {
-                var recipeEntry = _subRecipeEntries[i];
-                var recipe = recipeEntry.RecipeDTO;
-                var ingredients = recipeEntry.RecipeDTO.Ingredients;
-                var totalCount = (decimal)recipeEntry.Count;
-                var yield = (decimal)recipe.Yield;
-                var numberOfCrafts = (ushort)Math.Ceiling(totalCount / yield);
-
-                foreach (var ingredient in ingredients)
-                {
-                    var recipeDTO = GetRecipe(dbContext, ingredient.ItemDTO.Id);
-                    if (recipeDTO != null)
-                    {
-                        var subRecipeEntry = _subRecipeEntries.FirstOrDefault(r => r.RecipeDTO.Id == recipeDTO.Id);
-                        if (subRecipeEntry == null)
-                        {
-                            subRecipeEntry = new RecipeListEntryDTO
-                            {
-                                Id = 0,
-                                RecipeDTO = recipeDTO,
-                                Count = 0
-                            };
-                            _subRecipeEntries.Add(subRecipeEntry);
-                        }
-                        subRecipeEntry.Count += (ushort)(numberOfCrafts * ingredient.Count);
-                    }
-                }
-            }
-
-            for (int i = 0; i < _subRecipeEntries.Count; i++)
-            {
-                var recipeEntry = _subRecipeEntries[i];
-                var recipe = recipeEntry.RecipeDTO;
-                var ingredients = recipeEntry.RecipeDTO.Ingredients;
-                var totalCount = (decimal)recipeEntry.Count;
-                var yield = (decimal)recipe.Yield;
-                var numberOfCrafts = (ushort)Math.Ceiling(totalCount / yield);
-
-                foreach (var ingredient in ingredients)
-                {
-                    var recipeDTO = GetRecipe(dbContext, ingredient.ItemDTO.Id);
-                    if (recipeDTO == null)
-                    {
-                        var totalIngredient = _totalIngredients.FirstOrDefault(i => i.ItemDTO.Id == ingredient.ItemDTO.Id);
-                        if (totalIngredient == null)
-                        {
-                            totalIngredient = new TotalIngredient
-                            {
-                                Id = ingredient.Id,
-                                ItemDTO = ingredient.ItemDTO,
-                                Count = 0
-                            };
-                            _totalIngredients.Add(totalIngredient);
-                        }
-                        totalIngredient.Count += (ushort)(numberOfCrafts * ingredient.Count);
-                    }
-                }
-            }
-
-            var shards = _totalIngredients.Where(i => _shardIds.Contains(i.ItemDTO.Id)).ToList();
-
-            foreach (var item in shards)
-            {
-                _totalIngredients.Remove(item);
-                foreach (var totalShard in _totalShards)
-                {
-                    totalShard.SetShardCount(item);
-                }
-            }
-            TotalShardsGridView.Refresh();
-
-        }
-    }
-
-    private RecipeDTO? GetRecipe(CraftingDbContext dbContext, uint itemId)
-    {
-        var recipe = dbContext.Recipes.Include(r => r.CraftType).Include(r => r.Item).Include(r => r.Ingredients).FirstOrDefault(r => r.ItemId == itemId);
-        if (recipe == null) return null;
-
-        var recipeDTO = new RecipeDTO
-        {
-            Id = recipe.Id,
-            Yield = recipe.Yield,
-            CraftTypeDTO = new CraftTypeDTO
-            {
-                Id = recipe.CraftTypeId,
-                Name = recipe.CraftType.Name,
-            },
-            ItemDTO = new ItemDTO
-            {
-                Id = recipe.ItemId,
-                Name = recipe.Item.Name
-            }
-        };
-        var ingredients = new IngredientDTO[recipe.Ingredients.Count];
-
-        for (int i = 0; i < recipe.Ingredients.Count; i++)
-        {
-            var ingredient = recipe.Ingredients.ElementAt(i);
-            var item = dbContext.Items.First(i => i.Id == ingredient.ItemId);
-            ingredients[i] = new IngredientDTO
-            {
-                Id = ingredient.Id,
-                ItemDTO = new ItemDTO
-                {
-                    Id = ingredient.ItemId,
-                    Name = item.Name
-                },
-                RecipeDTO = recipeDTO,
-                Count = ingredient.Count
-            };
         }
 
-        recipeDTO.Ingredients = ingredients;
+        for (int i = 0; i < _subRecipeEntries.Count; i++)
+        {
+            var recipeEntry = _subRecipeEntries[i];
+            var recipe = recipeEntry.RecipeDTO;
+            var ingredients = recipeEntry.RecipeDTO.Ingredients;
+            var totalCount = (decimal)recipeEntry.Count;
+            var yield = (decimal)recipe.Yield;
+            var numberOfCrafts = (ushort)Math.Ceiling(totalCount / yield);
 
-        return recipeDTO;
+            foreach (var ingredient in ingredients)
+            {
+                var recipeDTO = dbController.GetRecipe(ingredient.ItemDTO.Id);
+                if (recipeDTO != null)
+                {
+                    var subRecipeEntry = _subRecipeEntries.FirstOrDefault(r => r.RecipeDTO.Id == recipeDTO.Id);
+                    if (subRecipeEntry == null)
+                    {
+                        subRecipeEntry = new RecipeListEntryDTO
+                        {
+                            Id = 0,
+                            RecipeDTO = recipeDTO,
+                            Count = 0
+                        };
+                        _subRecipeEntries.Add(subRecipeEntry);
+                    }
+                    subRecipeEntry.Count += (ushort)(numberOfCrafts * ingredient.Count);
+                }
+            }
+        }
+
+        for (int i = 0; i < _subRecipeEntries.Count; i++)
+        {
+            var recipeEntry = _subRecipeEntries[i];
+            var recipe = recipeEntry.RecipeDTO;
+            var ingredients = recipeEntry.RecipeDTO.Ingredients;
+            var totalCount = (decimal)recipeEntry.Count;
+            var yield = (decimal)recipe.Yield;
+            var numberOfCrafts = (ushort)Math.Ceiling(totalCount / yield);
+
+            foreach (var ingredient in ingredients)
+            {
+                var recipeDTO = dbController.GetRecipe(ingredient.ItemDTO.Id);
+                if (recipeDTO == null)
+                {
+                    var totalIngredient = _totalIngredients.FirstOrDefault(i => i.ItemDTO.Id == ingredient.ItemDTO.Id);
+                    if (totalIngredient == null)
+                    {
+                        totalIngredient = new TotalIngredient
+                        {
+                            Id = ingredient.Id,
+                            ItemDTO = ingredient.ItemDTO,
+                            Count = 0
+                        };
+                        _totalIngredients.Add(totalIngredient);
+                    }
+                    totalIngredient.Count += (ushort)(numberOfCrafts * ingredient.Count);
+                }
+            }
+        }
+
+        var shards = _totalIngredients.Where(i => _shardIds.Contains(i.ItemDTO.Id)).ToList();
+
+        foreach (var item in shards)
+        {
+            _totalIngredients.Remove(item);
+            foreach (var totalShard in _totalShards)
+            {
+                totalShard.SetShardCount(item);
+            }
+        }
+        TotalShardsGridView.Refresh();
+
+        
     }
 
     private void AddButton_Click(object sender, EventArgs e)
@@ -299,6 +254,7 @@ public partial class MainForm : Form
 
     }
 
+    //Move to Controller
     private void SaveNewRecipeList()
     {
 
@@ -309,27 +265,20 @@ public partial class MainForm : Form
             return;
         }
 
-        RecipeList recipeList = new RecipeList
+        var dbController = new DatabaseController();
+        var result = dbController.SaveNewRecipeList(listName, _recipeListEntries.ToList());
+
+        if(result != null)
         {
-            Name = listName
-        };
-
-        List<RecipeListEntry> entries = _recipeListEntries.Select(e => (RecipeListEntry)e).ToList();
-
-        using (var dbContext = new CraftingDbContext())
-        {
-            dbContext.RecipeLists.Add(recipeList);
-            dbContext.SaveChanges();
-
-            foreach (var entry in entries)
-            {
-                entry.RecipeListId = recipeList.Id;
-                dbContext.RecipeListEntries.Add(entry);
-            }
-            dbContext.SaveChanges();
+            _currentRecipeListDTO = result.Value.Item1;
+            _recipeListEntries.Clear();
+            _recipeListEntries = new BindingList<RecipeListEntryDTO>(result.Value.Item2);
+            RecipeListEntryGridView.DataSource = _recipeListEntries;
         }
+
     }
 
+    //Move to Controller
     private void OverwriteRecipeList()
     {
         if (_currentRecipeListDTO == null) return;
@@ -341,47 +290,14 @@ public partial class MainForm : Form
             return;
         }
 
-        _currentRecipeListDTO.Name = listName;
 
-        using (var dbContext = new CraftingDbContext())
+        var dbController = new DatabaseController();
+        var result = dbController.UpdateRecipeList(_currentRecipeListDTO.Id, listName, _recipeListEntries.ToList());
+
+        if (result)
         {
-            var currentEntries = dbContext.RecipeListEntries.Where(e => e.RecipeListId == _currentRecipeListDTO.Id).ToList();
-
-            var toUpdate = currentEntries.Where(e => _recipeListEntries.Any(f => f.Id == e.Id)).ToList();
-            var toDelete = currentEntries.Where(e => !_recipeListEntries.Any(f => f.Id == e.Id)).ToList();
-
-            if (toUpdate != null && toUpdate.Count() > 0)
-            {
-                dbContext.RecipeListEntries.UpdateRange(toUpdate);
-                dbContext.SaveChanges();
-            }
-            if (toDelete != null && toDelete.Count() > 0)
-            {
-                dbContext.RecipeListEntries.RemoveRange(toDelete);
-                dbContext.SaveChanges();
-            }
-
-            List<RecipeListEntry> toAdd = _recipeListEntries.Select(e => (RecipeListEntry)e).ToList();
-            if (toUpdate != null)
-            {
-                toAdd = toAdd.Where(e => !toUpdate.Any(f => f.Id == e.Id)).Select(e =>
-                    new RecipeListEntry
-                    {
-                        Id = e.Id,
-                        Count = e.Count,
-                        RecipeId = e.RecipeId,
-                        RecipeListId = e.RecipeListId
-                    }).ToList();
-            }
-
-            if(toAdd != null && toAdd.Count > 0)
-            {
-                dbContext.RecipeListEntries.AddRange(toAdd);
-                dbContext.SaveChanges();
-            }
-
+            _currentRecipeListDTO.Name = listName;
         }
-
 
     }
 
@@ -421,29 +337,17 @@ public partial class MainForm : Form
     private void RecipeListSelected(object sender, RecipeListSelectedEventArgs e)
     {
         _currentRecipeListDTO = (RecipeListDTO)e.SelectedRecipeList!;
+        ListNameTextBox.Text = _currentRecipeListDTO.Name;
 
         _recipeListEntries.Clear();
 
-        using (var dbContext = new CraftingDbContext())
+        var dbController = new DatabaseController();
+        var entries = dbController.GetRecipeListEntries(_currentRecipeListDTO.Id);
+        if (entries != null)
         {
-            var recipeListEntryDTOs = dbContext.RecipeListEntries.Where(e => e.RecipeListId == _currentRecipeListDTO.Id)
-                .Include(e => e.RecipeList)
-                .Include(e => e.Recipe)
-                .Include(e => e.Recipe.CraftType)
-                .Include(e => e.Recipe.Item).ToList().Select(e=>(RecipeListEntryDTO)e);
-
-            foreach (var entry in recipeListEntryDTOs)
-            {
-                var ingredients = dbContext.Ingredients.Where(i => i.RecipeId == entry.RecipeDTO.Id)
-                    .Include(i => i.Recipe)
-                    .Include(i => i.Item)
-                    .Select(i => (IngredientDTO)i).ToList();
-                entry.RecipeDTO.Ingredients = ingredients;
-                _recipeListEntries.Add(entry);
-            }
-
+            _recipeListEntries = new BindingList<RecipeListEntryDTO>(entries);
+            RecipeListEntryGridView.DataSource = _recipeListEntries;
         }
-        ListNameTextBox.Text = _currentRecipeListDTO.Name;
 
         RecipeListEntryGridView.Update();
         RecipeListEntryGridView.Refresh();
