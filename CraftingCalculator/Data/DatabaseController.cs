@@ -49,16 +49,33 @@ public class DatabaseController
 
             foreach (var entry in recipeListEntryDTOs)
             {
-                var ingredients = dbContext.Ingredients.Where(i => i.RecipeId == entry.RecipeDTO.Id)
-                    .Include(i => i.Recipe)
-                    .Include(i => i.Item)
-                    .Select(i => (IngredientDTO)i).ToList();
+                var ingredients = GetRecipeIngredients(entry.RecipeDTO.Id, dbContext);
                 entry.RecipeDTO.Ingredients = ingredients;
             }
 
         }
 
         return recipeListEntryDTOs;
+    }
+
+    public List<IngredientDTO> GetRecipeIngredients(uint recipeID)
+    {
+        using(var dbContext = new CraftingDbContext())
+        {
+            return GetRecipeIngredients(recipeID, dbContext);
+        }
+        
+    }
+
+    public List<IngredientDTO> GetRecipeIngredients(uint recipeID, CraftingDbContext dbContext)
+    {
+
+        var ingredients = dbContext.Ingredients.Where(i => i.RecipeId == recipeID)
+            .Include(i => i.Recipe)
+            .Include(i => i.Item)
+            .Select(i => (IngredientDTO)i).ToList();
+
+        return ingredients;
     }
 
     public ValueTuple<RecipeListDTO, List<RecipeListEntryDTO>>? SaveNewRecipeList(string listName, List<RecipeListEntryDTO> recipeListEntries)
