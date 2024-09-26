@@ -1,11 +1,7 @@
 ﻿using CraftingCalculator.DTOs;
 using CraftingCalculator.Models;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.DirectoryServices;
 
 namespace CraftingCalculator.Data;
 
@@ -32,6 +28,57 @@ public class DatabaseController
         }
 
         return recipeDTO;
+    }
+
+    public bool DeleteRecipe(uint recipeId)
+    {
+        try
+        {
+            using (var dbContext = new CraftingDbContext())
+            {
+                var ingredientsToDelete = dbContext.Ingredients.Where(i => i.RecipeId == recipeId);
+                foreach (var ingredient in ingredientsToDelete)
+                {
+                    dbContext.Ingredients.Remove(ingredient);
+                }
+                dbContext.Recipes.Remove(dbContext.Recipes.Single(r => r.Id == recipeId));
+                dbContext.SaveChanges();
+            }
+            return true;
+        }
+        catch (Exception ex)
+        {
+            return false;
+        }
+    }
+
+    public List<RecipeDTO> SearchRecipes(uint minRecipeLevel, uint maxRecipeLevel, string searchText)
+    {
+        using (var dbContext = new CraftingDbContext())
+        {
+            IEnumerable<Recipe> recipes = dbContext.Recipes
+                .Include(r => r.Item)
+                .Include(r => r.CraftType);
+
+            if (minRecipeLevel > 0)
+            {
+                recipes = recipes.Where(r => r.RecipeLevel >= minRecipeLevel);
+            }
+
+            if (maxRecipeLevel > 0)
+            {
+                recipes = recipes!.Where(r => r.RecipeLevel <= maxRecipeLevel);
+            }
+
+            if (!string.IsNullOrWhiteSpace(searchText))
+            {
+                recipes = recipes.Where(i => i.Item.Name.ToLower().Contains(searchText.ToLower()));
+            }
+
+            var searchResult = recipes.OrderBy(r => r.Id).Select(r => (RecipeDTO)r).ToList();
+
+            return searchResult;
+        }
     }
 
     public List<RecipeListEntryDTO>? GetRecipeListEntries(uint recipeListId)

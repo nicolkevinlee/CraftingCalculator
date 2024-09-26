@@ -12,10 +12,6 @@ public partial class ViewRecipesForm : Form
         InitializeComponent();
         RecipePicker.RecipeSelected += RecipePickerDidSelectIRecipe;
     }
-    private void ViewRecipesForm_Load(object sender, EventArgs e)
-    {
-        RecipePicker.LoadRecipes();
-    }
 
     private void RecipePickerDidSelectIRecipe(object sender, RecipeSelectedEventArgs e)
     {
@@ -35,11 +31,6 @@ public partial class ViewRecipesForm : Form
             MessageBox.Show($"Recipe for {_selectedRecipe.ItemDTO.Name}, has been deleted.");
             _selectedRecipe = null;
         }
-    }
-
-    private void AddItemForm_Closed(object sender, EventArgs e)
-    {
-        RecipePicker.LoadRecipes();
     }
 
     private void ViewButton_Click(object sender, EventArgs e)

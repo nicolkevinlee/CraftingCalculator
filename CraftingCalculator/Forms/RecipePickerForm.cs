@@ -41,11 +41,6 @@ namespace CraftingCalculator.Forms
             }
         }
 
-        private void RecipePickerForm_Load(object sender, EventArgs e)
-        {
-            RecipePicker.LoadRecipes();
-        }
-
         private void RecipePickerControlDidSelectRecipe(Object sender, RecipeSelectedEventArgs e)
         {
             _selectedRecipe = e.SelectedRecipe;

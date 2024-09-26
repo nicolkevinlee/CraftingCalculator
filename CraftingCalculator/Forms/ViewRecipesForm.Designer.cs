@@ -122,7 +122,6 @@
             MinimumSize = new Size(600, 500);
             Name = "ViewRecipesForm";
             Text = "View Recipes";
-            Load += ViewRecipesForm_Load;
             ((System.ComponentModel.ISupportInitialize)recipeDTOBindingSource).EndInit();
             tableLayoutPanel1.ResumeLayout(false);
             ResumeLayout(false);

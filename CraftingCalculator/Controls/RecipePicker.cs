@@ -7,7 +7,6 @@ namespace CraftingCalculator.Controls;
 public partial class RecipePicker : UserControl
 {
     private BindingList<RecipeDTO> _filteredRecipes;
-    private List<RecipeDTO>? _allRecipes;
     private RecipeDTO? _selectedRecipe;
     private uint _minRecipeLevel;
     private uint _maxRecipeLevel;
@@ -16,53 +15,24 @@ public partial class RecipePicker : UserControl
     public RecipePicker()
     {
         _selectedRecipe = null;
-        _allRecipes = null;
         _filteredRecipes = new BindingList<RecipeDTO>();
         _minRecipeLevel = 0;
         _maxRecipeLevel = 0;
         InitializeComponent();
+        RecipedGridView.DataSource = _filteredRecipes;
     }
     public void LoadRecipes()
     {
-        using (var dbContext = new CraftingDbContext())
-        {
-            _allRecipes = dbContext.Recipes.OrderBy(r => r.Id).Select(r =>
-                new RecipeDTO
-                {
-                    Id = r.Id,
-                    Yield = r.Yield,
-                    RecipeLevel = r.RecipeLevel,
-                    CraftTypeDTO = new CraftTypeDTO()
-                    {
-                        Id = r.CraftTypeId,
-                        Name = r.CraftType.Name
-                    },
-                    ItemDTO = new ItemDTO()
-                    {
-                        Id = r.ItemId,
-                        Name = r.Item.Name
-                    }
-                }
-            ).ToList();
-        }
-        RefreshList();
-        RecipedGridView.DataSource = _filteredRecipes;
+        SearchRecipe();
     }
 
     public void DeleteRecipe(RecipeDTO recipe)
     {
-        using (var dbContext = new CraftingDbContext())
+        var dbController = new DatabaseController();
+        if (dbController.DeleteRecipe(recipe.Id))
         {
-            var ingredientsToDelete = dbContext.Ingredients.Where(i => i.RecipeId == recipe.Id);
-            foreach (var ingredient in ingredientsToDelete)
-            {
-                dbContext.Ingredients.Remove(ingredient);
-            }
-            dbContext.Recipes.Remove(dbContext.Recipes.Single(r => r.Id == recipe.Id));
-            dbContext.SaveChanges();
-            _allRecipes.Remove(recipe);
+            _filteredRecipes.Remove(recipe);
         }
-        RefreshList();
     }
 
     private void RecipeGridView_CellClick(object sender, DataGridViewCellEventArgs e)
@@ -72,49 +42,6 @@ public partial class RecipePicker : UserControl
         {
             SelectedRecipe = _selectedRecipe
         });
-    }
-
-    private void RefreshList()
-    {
-        var searchText = SearchTextBox.Text.Trim();
-
-        _filteredRecipes.Clear();
-
-        List<RecipeDTO>? searchResult = null;
-
-        if (_minRecipeLevel > 0)
-        {
-            searchResult = _allRecipes!.Where(r => r.RecipeLevel >= _minRecipeLevel).ToList();
-        }
-        else
-        {
-            searchResult = _allRecipes!.ToList();
-        }
-
-        if (_maxRecipeLevel > 0)
-        {
-            searchResult = searchResult!.Where(r => r.RecipeLevel <= _maxRecipeLevel).ToList();
-        }
-        else
-        {
-            searchResult = searchResult!.ToList();
-        }
-
-        if (string.IsNullOrWhiteSpace(searchText))
-        {
-            searchResult!.ForEach(i =>
-            {
-                _filteredRecipes.Add(i);
-            });
-        }
-        else
-        {
-            searchResult = searchResult!.Where(i => i.ItemDTO.Name.ToLower().Contains(searchText.ToLower())).ToList();
-            searchResult.ForEach(i =>
-            {
-                _filteredRecipes.Add(i);
-            });
-        }
     }
 
     private void SearchButton_Click(object sender, EventArgs e)
@@ -130,7 +57,21 @@ public partial class RecipePicker : UserControl
         if (!success) recipeLevel = 0;
         _maxRecipeLevel = recipeLevel;
 
-        RefreshList();
+        SearchRecipe();
+    }
+
+    private void SearchRecipe()
+    {
+        var searchText = SearchTextBox.Text.Trim();
+
+        _filteredRecipes.Clear();
+
+        var dbController = new DatabaseController();
+        List<RecipeDTO> searchResult = dbController.SearchRecipes(_minRecipeLevel, _maxRecipeLevel, searchText);
+        searchResult.ForEach(i =>
+        {
+            _filteredRecipes.Add(i);
+        });
     }
 }
 

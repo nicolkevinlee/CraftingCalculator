@@ -85,7 +85,6 @@
             Controls.Add(RecipePicker);
             Name = "RecipePickerForm";
             Text = "RecipePickerForm";
-            Load += RecipePickerForm_Load;
             ResumeLayout(false);
             PerformLayout();
         }
