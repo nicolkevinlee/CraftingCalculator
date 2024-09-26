@@ -2,44 +2,33 @@
 using CraftingCalculator.Models;
 using System.ComponentModel;
 using System.Data;
+using System.DirectoryServices;
 
 namespace CraftingCalculator.Controls;
 
 public partial class ItemPickerControl : UserControl
 {
     private BindingList<Item> _filteredItems;
-    private List<Item>? _allItems;
     private Item? _selectedItem;
     public event EventHandler<ItemSelectedEventArgs> ItemSelected;
     public ItemPickerControl()
     {
         _selectedItem = null;
-        _allItems = null;
         _filteredItems = new BindingList<Item>();
         InitializeComponent();
-    }
-    
-    public void LoadItems()
-    {
-        using (var dbContext = new CraftingDbContext())
-        {
-            _allItems = dbContext.Items.ToList();
-        }
-        RefreshList();
         ItemsGridView.DataSource = _filteredItems;
     }
 
     public void DeleteItem(Item itemToDelete)
     {
-        using (var dbContext = new CraftingDbContext())
+        var dbController = new DatabaseController();
+        var success = dbController.DeleteItem(itemToDelete);
+        if(success)
         {
-            dbContext.Items.Remove(itemToDelete);
-            dbContext.SaveChanges();
-            _allItems = dbContext.Items.ToList();
+            _filteredItems.Remove(itemToDelete);
         }
-        RefreshList();
     }
-    
+
     private void ItemsGridView_CellClick(object sender, DataGridViewCellEventArgs e)
     {
         _selectedItem = _filteredItems[e.RowIndex];
@@ -49,32 +38,23 @@ public partial class ItemPickerControl : UserControl
         });
     }
 
-    private void RefreshList()
+    private void SearchItem()
     {
         var searchText = SearchTextBox.Text.Trim();
 
         _filteredItems.Clear();
 
-        if (string.IsNullOrWhiteSpace(searchText))
+        var dbController = new DatabaseController();
+        var searchResult = dbController.SearchItems(searchText);
+        searchResult.ForEach(i =>
         {
-            _allItems!.ForEach(i =>
-            {
-                _filteredItems.Add(i);
-            });
-        }
-        else
-        {
-            var searchResult = _allItems!.Where(i => i.Name.ToLower().Contains(searchText.ToLower())).ToList();
-            searchResult.ForEach(i =>
-            {
-                _filteredItems.Add(i);
-            });
-        }
+            _filteredItems.Add(i);
+        });
     }
 
-    private void SearchTextBox_TextChanged(object sender, EventArgs e)
+    private void SearchButton_Click(object sender, EventArgs e)
     {
-        RefreshList();
+        SearchItem();
     }
 }
 

@@ -80,6 +80,30 @@ public class DatabaseController
             return searchResult;
         }
     }
+    public bool DeleteItem(Item item)
+    {
+        using (var dbContext = new CraftingDbContext())
+        {
+            dbContext.Items.Remove(item);
+            dbContext.SaveChanges();
+            return true;
+        }
+    }
+
+    public List<Item> SearchItems(string searchText)
+    {
+        using (var dbContext = new CraftingDbContext())
+        {
+            IEnumerable<Item> items = dbContext.Items;
+            if (!string.IsNullOrWhiteSpace(searchText))
+            {
+                items = items.Where(i => i.Name.ToLower().Contains(searchText.ToLower()));
+            }
+            var searchResult = items.OrderBy(i => i.Id).ToList();
+
+            return searchResult;
+        }
+    }
 
     public List<RecipeListEntryDTO>? GetRecipeListEntries(uint recipeListId)
     {

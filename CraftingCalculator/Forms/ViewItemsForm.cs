@@ -13,15 +13,9 @@ public partial class ViewItemsForm : Form
         ItemPicker.ItemSelected += ItemPickerDidSelectItem;
     }
 
-    private void ViewItemsForm_Load(object sender, EventArgs e)
-    {
-        ItemPicker.LoadItems();
-    }
-
     private void AddButton_Click(object sender, EventArgs e)
     {
         var addItemForm = new AddItemForm();
-        addItemForm.FormClosed += AddItemForm_Closed;
         addItemForm.ShowDialog();
     }
 
@@ -44,11 +38,6 @@ public partial class ViewItemsForm : Form
             _selectedItem = null;
 
         }
-    }
-
-    private void AddItemForm_Closed(object sender, EventArgs e)
-    {
-        ItemPicker.LoadItems();
     }
 
 }

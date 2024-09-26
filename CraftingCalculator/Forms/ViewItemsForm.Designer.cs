@@ -115,7 +115,6 @@
             Controls.Add(ItemPicker);
             Name = "ViewItemsForm";
             Text = "View Items";
-            Load += ViewItemsForm_Load;
             tableLayoutPanel1.ResumeLayout(false);
             ResumeLayout(false);
         }

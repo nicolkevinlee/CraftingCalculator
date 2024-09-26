@@ -34,6 +34,7 @@
             idDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
             nameDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
             itemDTOBindingSource = new BindingSource(components);
+            SearchButton = new Button();
             ((System.ComponentModel.ISupportInitialize)ItemsGridView).BeginInit();
             ((System.ComponentModel.ISupportInitialize)itemDTOBindingSource).BeginInit();
             SuspendLayout();
@@ -43,9 +44,8 @@
             SearchTextBox.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             SearchTextBox.Location = new Point(3, 3);
             SearchTextBox.Name = "SearchTextBox";
-            SearchTextBox.Size = new Size(407, 23);
+            SearchTextBox.Size = new Size(326, 23);
             SearchTextBox.TabIndex = 0;
-            SearchTextBox.TextChanged += SearchTextBox_TextChanged;
             // 
             // ItemsGridView
             // 
@@ -88,10 +88,22 @@
             // 
             itemDTOBindingSource.DataSource = typeof(DTOs.ItemDTO);
             // 
+            // SearchButton
+            // 
+            SearchButton.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            SearchButton.Location = new Point(335, 3);
+            SearchButton.Name = "SearchButton";
+            SearchButton.Size = new Size(75, 23);
+            SearchButton.TabIndex = 2;
+            SearchButton.Text = "Search";
+            SearchButton.UseVisualStyleBackColor = true;
+            SearchButton.Click += SearchButton_Click;
+            // 
             // ItemPickerControl
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
+            Controls.Add(SearchButton);
             Controls.Add(ItemsGridView);
             Controls.Add(SearchTextBox);
             Name = "ItemPickerControl";
@@ -109,5 +121,6 @@
         private DataGridViewTextBoxColumn idDataGridViewTextBoxColumn;
         private DataGridViewTextBoxColumn nameDataGridViewTextBoxColumn;
         private BindingSource itemDTOBindingSource;
+        private Button SearchButton;
     }
 }
