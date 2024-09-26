@@ -149,6 +149,14 @@ public class DatabaseController
         return ingredients;
     }
 
+    public List<RecipeList> GetAllRecipeLists()
+    {
+        using (var dbContext = new CraftingDbContext())
+        {
+            return dbContext.RecipeLists.OrderBy(l => l.Id).ToList();
+        }
+    }
+
     public ValueTuple<RecipeListDTO, List<RecipeListEntryDTO>>? SaveNewRecipeList(string listName, List<RecipeListEntryDTO> recipeListEntries)
     {
 

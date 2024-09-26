@@ -2,46 +2,30 @@
 using CraftingCalculator.Models;
 using System.ComponentModel;
 using System.Data;
+using System.DirectoryServices;
 
 namespace CraftingCalculator.Controls;
 
 public partial class RecipeListPickerControl : UserControl
 {
     private BindingList<RecipeList> _filteredLists;
-    private List<RecipeList>? _allLists;
+    private List<RecipeList> _allLists;
     private RecipeList? _selectedList;
     public event EventHandler<RecipeListControlSelectedEventArgs> RecipeListSelected;
 
     public RecipeListPickerControl()
     {
         _selectedList = null;
-        _allLists = null;
         _filteredLists = new BindingList<RecipeList>();
         InitializeComponent();
     }
 
     public void LoadLists()
     {
-        using (var dbContext = new CraftingDbContext())
-        {
-            _allLists = dbContext.RecipeLists.ToList();
-        }
+        var dbController = new DatabaseController();
+        _allLists = dbController.GetAllRecipeLists();
         RefreshList();
         ListGridView.DataSource = _filteredLists;
-        ListGridView.ClearSelection();
-    }
-
-
-    public void DeleteItem(RecipeList recipeListToDelete)
-    {
-        using (var dbContext = new CraftingDbContext())
-        {
-            dbContext.RecipeLists.Remove(recipeListToDelete);
-            dbContext.RecipeListEntries.RemoveRange(dbContext.RecipeListEntries.Where(l => l.Id == recipeListToDelete.Id));
-            dbContext.SaveChanges();
-            _allLists = dbContext.RecipeLists.ToList();
-        }
-        RefreshList();
         ListGridView.ClearSelection();
     }
 
@@ -60,21 +44,16 @@ public partial class RecipeListPickerControl : UserControl
 
         _filteredLists.Clear();
 
-        if (string.IsNullOrWhiteSpace(searchText))
+        var searchResult = _allLists;
+        if (!string.IsNullOrWhiteSpace(searchText))
         {
-            _allLists!.ForEach(i =>
-            {
-                _filteredLists.Add(i);
-            });
+            searchResult = searchResult.Where(i => i.Name.ToLower().Contains(searchText.ToLower())).ToList();
+            
         }
-        else
+        searchResult.ForEach(i =>
         {
-            var searchResult = _allLists!.Where(i => i.Name.ToLower().Contains(searchText.ToLower())).ToList();
-            searchResult.ForEach(i =>
-            {
-                _filteredLists.Add(i);
-            });
-        }
+            _filteredLists.Add(i);
+        });
     }
 
     private void SearchTextBox_TextChanged(object sender, EventArgs e)

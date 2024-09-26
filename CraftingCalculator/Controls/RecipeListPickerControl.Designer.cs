@@ -31,8 +31,8 @@
             components = new System.ComponentModel.Container();
             SearchTextBox = new TextBox();
             ListGridView = new DataGridView();
-            recipeListBindingSource = new BindingSource(components);
             nameDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
+            recipeListBindingSource = new BindingSource(components);
             ((System.ComponentModel.ISupportInitialize)ListGridView).BeginInit();
             ((System.ComponentModel.ISupportInitialize)recipeListBindingSource).BeginInit();
             SuspendLayout();
@@ -44,6 +44,7 @@
             SearchTextBox.Name = "SearchTextBox";
             SearchTextBox.Size = new Size(350, 23);
             SearchTextBox.TabIndex = 0;
+            SearchTextBox.TextChanged += SearchTextBox_TextChanged;
             // 
             // ListGridView
             // 
@@ -67,10 +68,6 @@
             ListGridView.TabIndex = 1;
             ListGridView.CellClick += ListGridView_CellClick;
             // 
-            // recipeListBindingSource
-            // 
-            recipeListBindingSource.DataSource = typeof(Models.RecipeList);
-            // 
             // nameDataGridViewTextBoxColumn
             // 
             nameDataGridViewTextBoxColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
@@ -78,6 +75,10 @@
             nameDataGridViewTextBoxColumn.HeaderText = "Name";
             nameDataGridViewTextBoxColumn.Name = "nameDataGridViewTextBoxColumn";
             nameDataGridViewTextBoxColumn.ReadOnly = true;
+            // 
+            // recipeListBindingSource
+            // 
+            recipeListBindingSource.DataSource = typeof(Models.RecipeList);
             // 
             // RecipeListPickerControl
             // 
