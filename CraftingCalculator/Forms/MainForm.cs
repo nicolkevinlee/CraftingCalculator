@@ -242,5 +242,6 @@ public partial class MainForm : Form
         RecipeListEntryGridView.Refresh();
 
         GetTotalIngredients();
+        RecipeListEntryGridView.ClearSelection();
     }
 }

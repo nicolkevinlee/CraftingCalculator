@@ -30,8 +30,6 @@
         {
             components = new System.ComponentModel.Container();
             recipeDTOBindingSource = new BindingSource(components);
-            AddButton = new Button();
-            DeleteButton = new Button();
             CloseButton = new Button();
             RecipePicker = new Controls.RecipePicker();
             tableLayoutPanel1 = new TableLayoutPanel();
@@ -43,26 +41,6 @@
             // recipeDTOBindingSource
             // 
             recipeDTOBindingSource.DataSource = typeof(DTOs.RecipeDTO);
-            // 
-            // AddButton
-            // 
-            AddButton.Anchor = AnchorStyles.None;
-            AddButton.Location = new Point(172, 4);
-            AddButton.Name = "AddButton";
-            AddButton.Size = new Size(75, 23);
-            AddButton.TabIndex = 1;
-            AddButton.Text = "Add";
-            AddButton.UseVisualStyleBackColor = true;
-            // 
-            // DeleteButton
-            // 
-            DeleteButton.Anchor = AnchorStyles.None;
-            DeleteButton.Location = new Point(312, 4);
-            DeleteButton.Name = "DeleteButton";
-            DeleteButton.Size = new Size(75, 23);
-            DeleteButton.TabIndex = 3;
-            DeleteButton.Text = "Delete";
-            DeleteButton.UseVisualStyleBackColor = true;
             // 
             // CloseButton
             // 
@@ -91,8 +69,6 @@
             tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 25F));
             tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 25F));
             tableLayoutPanel1.Controls.Add(CloseButton, 3, 0);
-            tableLayoutPanel1.Controls.Add(DeleteButton, 2, 0);
-            tableLayoutPanel1.Controls.Add(AddButton, 1, 0);
             tableLayoutPanel1.Controls.Add(ViewButton, 0, 0);
             tableLayoutPanel1.Location = new Point(12, 423);
             tableLayoutPanel1.Name = "tableLayoutPanel1";
@@ -129,8 +105,6 @@
 
         #endregion
         private BindingSource recipeDTOBindingSource;
-        private Button AddButton;
-        private Button DeleteButton;
         private Button CloseButton;
         private Controls.RecipePicker RecipePicker;
         private TableLayoutPanel tableLayoutPanel1;

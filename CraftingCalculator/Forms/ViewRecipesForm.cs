@@ -18,21 +18,6 @@ public partial class ViewRecipesForm : Form
         _selectedRecipe = e.SelectedRecipe;
     }
 
-    private void DeleteButton_Click(object sender, EventArgs e)
-    {
-        if (_selectedRecipe == null) return;
-
-        DialogResult result = MessageBox.Show($"Delete Recipe for {_selectedRecipe.ItemDTO.Name}?", "Warning", MessageBoxButtons.YesNo);
-
-        if (result == DialogResult.Yes)
-        {
-            RecipePicker.DeleteRecipe(_selectedRecipe);
-
-            MessageBox.Show($"Recipe for {_selectedRecipe.ItemDTO.Name}, has been deleted.");
-            _selectedRecipe = null;
-        }
-    }
-
     private void ViewButton_Click(object sender, EventArgs e)
     {
 
