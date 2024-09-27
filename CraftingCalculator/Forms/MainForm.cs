@@ -10,20 +10,20 @@ public partial class MainForm : Form
 {
     private static readonly uint[] _shardIds = { 4, 1395, 1427, 7, 1400, 1430, 231, 1455, 1487, 357, 1515, 1538, 508, 1597, 1628, 975, 1758, 1771 };
 
-    private BindingList<RecipeListEntryDTO> _recipeListEntries;
-    private BindingList<RecipeListEntryDTO> _subRecipeEntries;
+    private BindingList<RecipeListEntry> _recipeListEntries;
+    private BindingList<RecipeListEntry> _subRecipeEntries;
     private BindingList<TotalIngredient> _totalIngredients;
     private BindingList<TotalShards> _totalShards;
 
-    private RecipeListEntryDTO? _selectedRecipeListEntryDTO;
-    private RecipeListDTO? _currentRecipeListDTO;
+    private RecipeListEntry? _selectedRecipeListEntry;
+    private RecipeList? _currentRecipeList;
 
     public MainForm()
     {
-        _selectedRecipeListEntryDTO = null;
-        _currentRecipeListDTO = null;
-        _recipeListEntries = new BindingList<RecipeListEntryDTO>();
-        _subRecipeEntries = new BindingList<RecipeListEntryDTO>();
+        _selectedRecipeListEntry = null;
+        _currentRecipeList = null;
+        _recipeListEntries = new BindingList<RecipeListEntry>();
+        _subRecipeEntries = new BindingList<RecipeListEntry>();
         _totalIngredients = new BindingList<TotalIngredient>();
         _totalShards = new BindingList<TotalShards>();
 
@@ -60,11 +60,13 @@ public partial class MainForm : Form
 
     private void RecipeAdded(object sender, RecipeAddedEventArgs e)
     {
-        var recipeListEntry = _recipeListEntries.FirstOrDefault(r => r.RecipeDTO.Id == e.SelectedRecipe.Id);
+        if (e.SelectedRecipe == null) return;
+
+        var recipeListEntry = _recipeListEntries.FirstOrDefault(r => r.RecipeId == e.SelectedRecipe.Id);
 
         if (recipeListEntry == null)
         {
-            recipeListEntry = CreateNewRecipeListEntry(_currentRecipeListDTO, e.SelectedRecipe, e.Count);
+            recipeListEntry = CreateNewRecipeListEntry(_currentRecipeList, e.SelectedRecipe, e.Count);
             _recipeListEntries.Add(recipeListEntry);
         }
         else
@@ -78,18 +80,21 @@ public partial class MainForm : Form
         GetTotalIngredients();
     }
 
-    private RecipeListEntryDTO CreateNewRecipeListEntry(RecipeListDTO? recipeListDTO, RecipeDTO recipeDTO, uint count)
+    private RecipeListEntry CreateNewRecipeListEntry(RecipeList? recipeList, Recipe recipe, uint count)
     {
-        var recipeListEntry = new RecipeListEntryDTO
+        var recipeListEntry = new RecipeListEntry
         {
             Id = 0,
-            RecipeListDTO = recipeListDTO ?? null,
-            RecipeDTO = recipeDTO,
+            RecipeListId = (recipeList != null) ? recipeList.Id : 0,
+            RecipeList = recipeList ?? null,
+            RecipeId = recipe.Id,
+            Recipe = recipe,
             Count = count
         };
+        /*
         var dbController = new DatabaseController();
-        var ingredients = dbController.GetRecipeIngredients(recipeDTO.Id);
-        recipeListEntry.RecipeDTO.Ingredients = ingredients;
+        var ingredients = dbController.GetRecipeIngredients(recipe.Id);
+        recipeListEntry.Recipe.Ingredients = ingredients;*/
 
         return recipeListEntry;
     }
@@ -104,7 +109,7 @@ public partial class MainForm : Form
         _totalIngredients.Clear();
         _totalShards.Clear();
 
-        _subRecipeEntries = new BindingList<RecipeListEntryDTO>(result.SubRecipeListEntries);
+        _subRecipeEntries = new BindingList<RecipeListEntry>(result.SubRecipeListEntries);
         _totalIngredients = new BindingList<TotalIngredient>(result.TotalIngredients);
         _totalShards = new BindingList<TotalShards>(result.TotalShards);
 
@@ -134,7 +139,7 @@ public partial class MainForm : Form
     private void SaveButton_Click(object sender, EventArgs e)
     {
         
-        if(_currentRecipeListDTO == null)
+        if(_currentRecipeList == null)
         {
             SaveNewRecipeList();
         }
@@ -160,9 +165,9 @@ public partial class MainForm : Form
 
         if(result != null)
         {
-            _currentRecipeListDTO = result.Value.Item1;
+            _currentRecipeList = result.Value.Item1;
             _recipeListEntries.Clear();
-            _recipeListEntries = new BindingList<RecipeListEntryDTO>(result.Value.Item2);
+            _recipeListEntries = new BindingList<RecipeListEntry>(result.Value.Item2);
             RecipeListEntryGridView.DataSource = _recipeListEntries;
         }
 
@@ -170,7 +175,7 @@ public partial class MainForm : Form
 
     private void OverwriteRecipeList()
     {
-        if (_currentRecipeListDTO == null) return;
+        if (_currentRecipeList == null) return;
 
         var listName = ListNameTextBox.Text.Trim();
 
@@ -181,11 +186,11 @@ public partial class MainForm : Form
 
 
         var dbController = new DatabaseController();
-        var result = dbController.UpdateRecipeList(_currentRecipeListDTO.Id, listName, _recipeListEntries.ToList());
+        var result = dbController.UpdateRecipeList(_currentRecipeList.Id, listName, _recipeListEntries.ToList());
 
         if (result)
         {
-            _currentRecipeListDTO.Name = listName;
+            _currentRecipeList.Name = listName;
         }
 
     }
@@ -205,19 +210,19 @@ public partial class MainForm : Form
 
     private void RecipeListEntryGridView_CellClick(object sender, DataGridViewCellEventArgs e)
     {
-        _selectedRecipeListEntryDTO = _recipeListEntries[e.RowIndex];
+        _selectedRecipeListEntry = _recipeListEntries[e.RowIndex];
     }
 
     private void RemoveButton_Click(object sender, EventArgs e)
     {
-        if (_selectedRecipeListEntryDTO == null) return;
+        if (_selectedRecipeListEntry == null) return;
 
-        DialogResult toRemove = MessageBox.Show($"Remove {_selectedRecipeListEntryDTO.RecipeDTO.ItemDTO.Name}?", "Warning", MessageBoxButtons.YesNo);
+        DialogResult toRemove = MessageBox.Show($"Remove {_selectedRecipeListEntry.Recipe}?", "Warning", MessageBoxButtons.YesNo);
 
         if (toRemove == DialogResult.Yes)
         {
-            _recipeListEntries.Remove( _selectedRecipeListEntryDTO );
-            _selectedRecipeListEntryDTO = null;
+            _recipeListEntries.Remove( _selectedRecipeListEntry );
+            _selectedRecipeListEntry = null;
             RecipeListEntryGridView.ClearSelection();
             GetTotalIngredients();
         }
@@ -225,16 +230,16 @@ public partial class MainForm : Form
 
     private void RecipeListSelected(object sender, RecipeListSelectedEventArgs e)
     {
-        _currentRecipeListDTO = (RecipeListDTO)e.SelectedRecipeList!;
-        ListNameTextBox.Text = _currentRecipeListDTO.Name;
+        _currentRecipeList = e.SelectedRecipeList;
+        ListNameTextBox.Text = _currentRecipeList.Name;
 
         _recipeListEntries.Clear();
 
         var dbController = new DatabaseController();
-        var entries = dbController.GetRecipeListEntries(_currentRecipeListDTO.Id);
+        var entries = dbController.GetRecipeListEntries(_currentRecipeList.Id);
         if (entries != null)
         {
-            _recipeListEntries = new BindingList<RecipeListEntryDTO>(entries);
+            _recipeListEntries = new BindingList<RecipeListEntry>(entries);
             RecipeListEntryGridView.DataSource = _recipeListEntries;
         }
 

@@ -11,7 +11,9 @@ public class Recipe
     public virtual CraftType CraftType { get; set; }
     public uint ItemId { get; set; }
     public virtual Item Item { get; set; }
-    public ICollection<Ingredient> Ingredients { get; }
+    public ICollection<Ingredient> Ingredients { get; set; }
+
+    public override string ToString() => (Item != null) ? Item.Name : "";
 
     public static explicit operator Recipe(RecipeDTO recipeDTO)
     {

@@ -7,27 +7,22 @@ namespace CraftingCalculator.Data;
 
 public class DatabaseController
 {
-    public RecipeDTO? GetRecipe(uint itemId)
+    public Recipe? GetRecipe(uint itemId)
     {
-        RecipeDTO? recipeDTO = null;
+        Recipe? recipe = null;
         using (CraftingDbContext dbContext = new CraftingDbContext()) {
-            var recipe = dbContext.Recipes.Include(r => r.CraftType).Include(r => r.Item).Include(r => r.Ingredients).FirstOrDefault(r => r.ItemId == itemId);
+            recipe = dbContext.Recipes
+                .Include(r => r.CraftType)
+                .Include(r => r.Item)
+                .FirstOrDefault(r => r.ItemId == itemId);
             if (recipe == null) return null;
 
-            recipeDTO = (RecipeDTO)recipe;
-            var ingredients = recipe.Ingredients.Select((ingredient) =>
-            {
-                var item = dbContext.Items.First(i => i.Id == ingredient.ItemId);
-                var ingredientDTO = (IngredientDTO)ingredient;
-                ingredientDTO.ItemDTO = (ItemDTO)item;
-                ingredientDTO.RecipeDTO = recipeDTO;
-                return ingredientDTO;
-            }).ToList();
+            var ingredients = GetRecipeIngredients(recipe.Id, dbContext);
 
-            recipeDTO.Ingredients = ingredients;
+            recipe.Ingredients = ingredients;
         }
 
-        return recipeDTO;
+        return recipe;
     }
 
     public bool DeleteRecipe(uint recipeId)
@@ -52,7 +47,7 @@ public class DatabaseController
         }
     }
 
-    public List<RecipeDTO> SearchRecipes(uint minRecipeLevel, uint maxRecipeLevel, string searchText)
+    public List<Recipe> SearchRecipes(uint minRecipeLevel, uint maxRecipeLevel, string searchText)
     {
         using (var dbContext = new CraftingDbContext())
         {
@@ -75,7 +70,7 @@ public class DatabaseController
                 recipes = recipes.Where(i => i.Item.Name.ToLower().Contains(searchText.ToLower()));
             }
 
-            var searchResult = recipes.OrderBy(r => r.Id).Select(r => (RecipeDTO)r).ToList();
+            var searchResult = recipes.OrderBy(r => r.Id).ToList();
 
             return searchResult;
         }
@@ -105,31 +100,30 @@ public class DatabaseController
         }
     }
 
-    public List<RecipeListEntryDTO>? GetRecipeListEntries(uint recipeListId)
+    public List<RecipeListEntry>? GetRecipeListEntries(uint recipeListId)
     {
-        List<RecipeListEntryDTO>? recipeListEntryDTOs = null;
+        List<RecipeListEntry>? recipeListEntries = null;
         using (var dbContext = new CraftingDbContext())
         {
-            recipeListEntryDTOs = dbContext.RecipeListEntries.Where(e => e.RecipeListId == recipeListId)
+            recipeListEntries = dbContext.RecipeListEntries.Where(e => e.RecipeListId == recipeListId)
                 .Include(e => e.RecipeList)
                 .Include(e => e.Recipe)
                 .Include(e => e.Recipe.CraftType)
                 .Include(e => e.Recipe.Item)
-                .Select(e => (RecipeListEntryDTO)e)
                 .ToList();
-
-            foreach (var entry in recipeListEntryDTOs)
+            
+            foreach (var entry in recipeListEntries)
             {
-                var ingredients = GetRecipeIngredients(entry.RecipeDTO.Id, dbContext);
-                entry.RecipeDTO.Ingredients = ingredients;
+                var ingredients = GetRecipeIngredients(entry.Recipe.Id, dbContext);
+                entry.Recipe.Ingredients = ingredients;
             }
 
         }
 
-        return recipeListEntryDTOs;
+        return recipeListEntries;
     }
 
-    public List<IngredientDTO> GetRecipeIngredients(uint recipeID)
+    public List<Ingredient> GetRecipeIngredients(uint recipeID)
     {
         using(var dbContext = new CraftingDbContext())
         {
@@ -138,13 +132,13 @@ public class DatabaseController
         
     }
 
-    public List<IngredientDTO> GetRecipeIngredients(uint recipeID, CraftingDbContext dbContext)
+    public List<Ingredient> GetRecipeIngredients(uint recipeID, CraftingDbContext dbContext)
     {
 
         var ingredients = dbContext.Ingredients.Where(i => i.RecipeId == recipeID)
             .Include(i => i.Recipe)
             .Include(i => i.Item)
-            .Select(i => (IngredientDTO)i).ToList();
+            .ToList();
 
         return ingredients;
     }
@@ -157,7 +151,7 @@ public class DatabaseController
         }
     }
 
-    public ValueTuple<RecipeListDTO, List<RecipeListEntryDTO>>? SaveNewRecipeList(string listName, List<RecipeListEntryDTO> recipeListEntries)
+    public ValueTuple<RecipeList, List<RecipeListEntry>>? SaveNewRecipeList(string listName, List<RecipeListEntry> recipeListEntries)
     {
 
         if (string.IsNullOrEmpty(listName) || recipeListEntries.Count == 0)
@@ -177,26 +171,18 @@ public class DatabaseController
             dbContext.RecipeLists.Add(recipeList);
             dbContext.SaveChanges();
 
-            entries = recipeListEntries.Select(e => new RecipeListEntry
-                    {
-                        Id = e.Id,
-                        Count = e.Count,
-                        RecipeId = e.RecipeDTO.Id,
-                        RecipeListId = recipeList.Id
-                    }).ToList();
+            recipeListEntries.ForEach(e => e.RecipeListId = recipeList.Id);
+            entries = recipeListEntries.Select(e => e.ToDatabaseEntry()).ToList();
   
             dbContext.RecipeListEntries.AddRange(entries);
             dbContext.SaveChanges();
         }
 
-        List<RecipeListEntryDTO> recipeEntryDTOs = GetRecipeListEntries(recipeList.Id)!;
-        RecipeListDTO recipeListDTO = (RecipeListDTO) recipeList;
-
-        return (recipeListDTO, recipeEntryDTOs);
+        return (recipeList, recipeListEntries);
 
     }
 
-    public bool UpdateRecipeList(uint recipeListId, string listName, List<RecipeListEntryDTO> recipeListEntries)
+    public bool UpdateRecipeList(uint recipeListId, string listName, List<RecipeListEntry> recipeListEntries)
     {
 
         if (string.IsNullOrEmpty(listName) || recipeListEntries.Count == 0)
@@ -215,36 +201,32 @@ public class DatabaseController
             dbContext.RecipeLists.Update(recipeList);
             dbContext.SaveChanges();
 
+            recipeListEntries.ForEach(e => e.RecipeListId = recipeList.Id);
+            var updatedEntries = recipeListEntries.Select(e => e.ToDatabaseEntry());
+
             var currentEntries = dbContext.RecipeListEntries.Where(e => e.RecipeListId == recipeListId).ToList();
 
-            var toUpdate = currentEntries.Where(e => recipeListEntries.Any(f => f.Id == e.Id)).ToList();
-            var toDelete = currentEntries.Where(e => !recipeListEntries.Any(f => f.Id == e.Id)).ToList();
+            var toUpdate = currentEntries.Where(e => updatedEntries.Any(f => f.Id == e.Id)).ToList();
+            var toDelete = currentEntries.Where(e => !updatedEntries.Any(f => f.Id == e.Id)).ToList();
 
-            if (toUpdate != null && toUpdate.Count() > 0)
+            if (toUpdate.Count() > 0)
             {
                 dbContext.RecipeListEntries.UpdateRange(toUpdate);
                 dbContext.SaveChanges();
             }
-            if (toDelete != null && toDelete.Count() > 0)
+            if (toDelete.Count() > 0)
             {
                 dbContext.RecipeListEntries.RemoveRange(toDelete);
                 dbContext.SaveChanges();
             }
 
-            List<RecipeListEntry> toAdd = recipeListEntries.Select(e => (RecipeListEntry)e).ToList();
+            List<RecipeListEntry> toAdd = new List<RecipeListEntry>(updatedEntries);
             if (toUpdate != null)
             {
-                toAdd = toAdd.Where(e => !toUpdate.Any(f => f.Id == e.Id)).Select(e =>
-                    new RecipeListEntry
-                    {
-                        Id = e.Id,
-                        Count = e.Count,
-                        RecipeId = e.RecipeId,
-                        RecipeListId = e.RecipeListId
-                    }).ToList();
+                toAdd = toAdd.Where(e => !toUpdate.Any(f => f.Id == e.Id)).ToList();
             }
 
-            if (toAdd != null && toAdd.Count > 0)
+            if (toAdd.Count > 0)
             {
                 dbContext.RecipeListEntries.AddRange(toAdd);
                 dbContext.SaveChanges();

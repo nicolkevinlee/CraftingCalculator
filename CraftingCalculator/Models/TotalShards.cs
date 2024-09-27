@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace CraftingCalculator.DTOs;
+﻿namespace CraftingCalculator.Models;
 
 public class TotalShards
 {
@@ -25,7 +19,7 @@ public class TotalShards
     public ushort FireCount { set; get; }
     public ushort EarthCount { set; get; }
     public ushort IceCount { set; get; }
-    public ushort WindCount { set; get;}
+    public ushort WindCount { set; get; }
     public ushort LightningCount { set; get; }
     public ushort WaterCount { set; get; }
 
@@ -39,12 +33,12 @@ public class TotalShards
 
     public void SetShardCount(TotalIngredient totalIngredient)
     {
-        if (_fireIds[_selectedIndex] == totalIngredient.ItemDTO.Id) FireCount += totalIngredient.Count;
-        if (_earthIds[_selectedIndex] == totalIngredient.ItemDTO.Id) EarthCount += totalIngredient.Count;
-        if (_iceIds[_selectedIndex] == totalIngredient.ItemDTO.Id) IceCount += totalIngredient.Count;
-        if (_windIds[_selectedIndex] == totalIngredient.ItemDTO.Id) WindCount += totalIngredient.Count;
-        if (_lightningIds[_selectedIndex] == totalIngredient.ItemDTO.Id) LightningCount += totalIngredient.Count;
-        if (_waterIds[_selectedIndex] == totalIngredient.ItemDTO.Id) WaterCount += totalIngredient.Count;
+        if (_fireIds[_selectedIndex] == totalIngredient.Item.Id) FireCount += totalIngredient.Count;
+        if (_earthIds[_selectedIndex] == totalIngredient.Item.Id) EarthCount += totalIngredient.Count;
+        if (_iceIds[_selectedIndex] == totalIngredient.Item.Id) IceCount += totalIngredient.Count;
+        if (_windIds[_selectedIndex] == totalIngredient.Item.Id) WindCount += totalIngredient.Count;
+        if (_lightningIds[_selectedIndex] == totalIngredient.Item.Id) LightningCount += totalIngredient.Count;
+        if (_waterIds[_selectedIndex] == totalIngredient.Item.Id) WaterCount += totalIngredient.Count;
     }
 
     public void Clear()
@@ -57,5 +51,5 @@ public class TotalShards
         WaterCount = 0;
     }
 
-    
+
 }

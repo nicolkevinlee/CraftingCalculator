@@ -29,25 +29,26 @@
         private void InitializeComponent()
         {
             components = new System.ComponentModel.Container();
+            DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
             tableLayoutPanel1 = new TableLayoutPanel();
+            CraftTypeLabel = new Label();
+            label4 = new Label();
             YieldLabel = new Label();
             RecipeLevelLabel = new Label();
             label1 = new Label();
             label2 = new Label();
             label3 = new Label();
             ItemNameLabel = new Label();
-            IngredientsDataGrid = new DataGridView();
-            ingredientBindingSource = new BindingSource(components);
-            label4 = new Label();
             label5 = new Label();
-            CraftTypeLabel = new Label();
+            IngredientsDataGrid = new DataGridView();
             ingredientDTOBindingSource = new BindingSource(components);
+            ingredientBindingSource = new BindingSource(components);
             ItemDTO = new DataGridViewTextBoxColumn();
             countDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
             tableLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)IngredientsDataGrid).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)ingredientBindingSource).BeginInit();
             ((System.ComponentModel.ISupportInitialize)ingredientDTOBindingSource).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)ingredientBindingSource).BeginInit();
             SuspendLayout();
             // 
             // tableLayoutPanel1
@@ -76,6 +77,30 @@
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
             tableLayoutPanel1.Size = new Size(404, 150);
             tableLayoutPanel1.TabIndex = 0;
+            // 
+            // CraftTypeLabel
+            // 
+            CraftTypeLabel.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            CraftTypeLabel.AutoSize = true;
+            CraftTypeLabel.Font = new Font("Segoe UI Semibold", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            CraftTypeLabel.Location = new Point(103, 90);
+            CraftTypeLabel.Name = "CraftTypeLabel";
+            CraftTypeLabel.Size = new Size(298, 30);
+            CraftTypeLabel.TabIndex = 8;
+            CraftTypeLabel.Text = "crafttype";
+            CraftTypeLabel.TextAlign = ContentAlignment.MiddleRight;
+            // 
+            // label4
+            // 
+            label4.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            label4.AutoSize = true;
+            label4.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold);
+            label4.Location = new Point(3, 90);
+            label4.Name = "label4";
+            label4.Size = new Size(94, 30);
+            label4.TabIndex = 6;
+            label4.Text = "Type";
+            label4.TextAlign = ContentAlignment.MiddleLeft;
             // 
             // YieldLabel
             // 
@@ -149,41 +174,6 @@
             ItemNameLabel.Text = "itemname";
             ItemNameLabel.TextAlign = ContentAlignment.MiddleRight;
             // 
-            // IngredientsDataGrid
-            // 
-            IngredientsDataGrid.AllowUserToAddRows = false;
-            IngredientsDataGrid.AllowUserToDeleteRows = false;
-            IngredientsDataGrid.AllowUserToResizeColumns = false;
-            IngredientsDataGrid.AllowUserToResizeRows = false;
-            IngredientsDataGrid.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            IngredientsDataGrid.AutoGenerateColumns = false;
-            IngredientsDataGrid.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            IngredientsDataGrid.Columns.AddRange(new DataGridViewColumn[] { ItemDTO, countDataGridViewTextBoxColumn });
-            IngredientsDataGrid.DataSource = ingredientDTOBindingSource;
-            IngredientsDataGrid.Location = new Point(12, 168);
-            IngredientsDataGrid.Name = "IngredientsDataGrid";
-            IngredientsDataGrid.ReadOnly = true;
-            IngredientsDataGrid.RowHeadersVisible = false;
-            IngredientsDataGrid.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            IngredientsDataGrid.Size = new Size(404, 364);
-            IngredientsDataGrid.TabIndex = 1;
-            // 
-            // ingredientBindingSource
-            // 
-            ingredientBindingSource.DataSource = typeof(Models.Ingredient);
-            // 
-            // label4
-            // 
-            label4.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            label4.AutoSize = true;
-            label4.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold);
-            label4.Location = new Point(3, 90);
-            label4.Name = "label4";
-            label4.Size = new Size(94, 30);
-            label4.TabIndex = 6;
-            label4.Text = "Type";
-            label4.TextAlign = ContentAlignment.MiddleLeft;
-            // 
             // label5
             // 
             label5.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
@@ -197,26 +187,37 @@
             label5.Text = "Ingredients";
             label5.TextAlign = ContentAlignment.MiddleLeft;
             // 
-            // CraftTypeLabel
+            // IngredientsDataGrid
             // 
-            CraftTypeLabel.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            CraftTypeLabel.AutoSize = true;
-            CraftTypeLabel.Font = new Font("Segoe UI Semibold", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            CraftTypeLabel.Location = new Point(103, 90);
-            CraftTypeLabel.Name = "CraftTypeLabel";
-            CraftTypeLabel.Size = new Size(298, 30);
-            CraftTypeLabel.TabIndex = 8;
-            CraftTypeLabel.Text = "crafttype";
-            CraftTypeLabel.TextAlign = ContentAlignment.MiddleRight;
+            IngredientsDataGrid.AllowUserToAddRows = false;
+            IngredientsDataGrid.AllowUserToDeleteRows = false;
+            IngredientsDataGrid.AllowUserToResizeColumns = false;
+            IngredientsDataGrid.AllowUserToResizeRows = false;
+            IngredientsDataGrid.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            IngredientsDataGrid.AutoGenerateColumns = false;
+            IngredientsDataGrid.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            IngredientsDataGrid.Columns.AddRange(new DataGridViewColumn[] { ItemDTO, countDataGridViewTextBoxColumn });
+            IngredientsDataGrid.DataSource = ingredientBindingSource;
+            IngredientsDataGrid.Location = new Point(12, 168);
+            IngredientsDataGrid.Name = "IngredientsDataGrid";
+            IngredientsDataGrid.ReadOnly = true;
+            IngredientsDataGrid.RowHeadersVisible = false;
+            IngredientsDataGrid.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            IngredientsDataGrid.Size = new Size(404, 364);
+            IngredientsDataGrid.TabIndex = 1;
             // 
             // ingredientDTOBindingSource
             // 
             ingredientDTOBindingSource.DataSource = typeof(DTOs.IngredientDTO);
             // 
+            // ingredientBindingSource
+            // 
+            ingredientBindingSource.DataSource = typeof(Models.Ingredient);
+            // 
             // ItemDTO
             // 
             ItemDTO.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            ItemDTO.DataPropertyName = "ItemDTO";
+            ItemDTO.DataPropertyName = "Item";
             ItemDTO.HeaderText = "Item Name";
             ItemDTO.Name = "ItemDTO";
             ItemDTO.ReadOnly = true;
@@ -224,10 +225,12 @@
             // countDataGridViewTextBoxColumn
             // 
             countDataGridViewTextBoxColumn.DataPropertyName = "Count";
-            countDataGridViewTextBoxColumn.HeaderText = "Count";
+            dataGridViewCellStyle1.Alignment = DataGridViewContentAlignment.MiddleRight;
+            countDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle1;
+            countDataGridViewTextBoxColumn.HeaderText = "Total";
             countDataGridViewTextBoxColumn.Name = "countDataGridViewTextBoxColumn";
             countDataGridViewTextBoxColumn.ReadOnly = true;
-            countDataGridViewTextBoxColumn.Width = 50;
+            countDataGridViewTextBoxColumn.Width = 75;
             // 
             // ViewSingleRecipeForm
             // 
@@ -241,8 +244,8 @@
             tableLayoutPanel1.ResumeLayout(false);
             tableLayoutPanel1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)IngredientsDataGrid).EndInit();
-            ((System.ComponentModel.ISupportInitialize)ingredientBindingSource).EndInit();
             ((System.ComponentModel.ISupportInitialize)ingredientDTOBindingSource).EndInit();
+            ((System.ComponentModel.ISupportInitialize)ingredientBindingSource).EndInit();
             ResumeLayout(false);
         }
 
@@ -260,8 +263,8 @@
         private Label CraftTypeLabel;
         private Label label4;
         private Label label5;
+        private BindingSource ingredientDTOBindingSource;
         private DataGridViewTextBoxColumn ItemDTO;
         private DataGridViewTextBoxColumn countDataGridViewTextBoxColumn;
-        private BindingSource ingredientDTOBindingSource;
     }
 }

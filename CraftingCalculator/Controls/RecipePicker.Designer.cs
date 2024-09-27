@@ -31,11 +31,6 @@
             components = new System.ComponentModel.Container();
             SearchTextBox = new TextBox();
             RecipedGridView = new DataGridView();
-            idDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
-            yieldDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
-            craftTypeDTODataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
-            RecipeLevel = new DataGridViewTextBoxColumn();
-            itemDTODataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
             recipeDTOBindingSource = new BindingSource(components);
             RecipeLevelLabel = new Label();
             MinRecipeLevelTextBox = new TextBox();
@@ -43,8 +38,15 @@
             MaxRecipeLevelTextBox = new TextBox();
             ItemNameLabel = new Label();
             SearchButton = new Button();
+            recipeBindingSource = new BindingSource(components);
+            idDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
+            yieldDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
+            CraftType = new DataGridViewTextBoxColumn();
+            RecipeLevel = new DataGridViewTextBoxColumn();
+            Item = new DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)RecipedGridView).BeginInit();
             ((System.ComponentModel.ISupportInitialize)recipeDTOBindingSource).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)recipeBindingSource).BeginInit();
             SuspendLayout();
             // 
             // SearchTextBox
@@ -65,8 +67,8 @@
             RecipedGridView.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             RecipedGridView.AutoGenerateColumns = false;
             RecipedGridView.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            RecipedGridView.Columns.AddRange(new DataGridViewColumn[] { idDataGridViewTextBoxColumn, yieldDataGridViewTextBoxColumn, craftTypeDTODataGridViewTextBoxColumn, RecipeLevel, itemDTODataGridViewTextBoxColumn });
-            RecipedGridView.DataSource = recipeDTOBindingSource;
+            RecipedGridView.Columns.AddRange(new DataGridViewColumn[] { idDataGridViewTextBoxColumn, yieldDataGridViewTextBoxColumn, CraftType, RecipeLevel, Item });
+            RecipedGridView.DataSource = recipeBindingSource;
             RecipedGridView.Location = new Point(3, 32);
             RecipedGridView.MultiSelect = false;
             RecipedGridView.Name = "RecipedGridView";
@@ -76,45 +78,6 @@
             RecipedGridView.Size = new Size(598, 437);
             RecipedGridView.TabIndex = 1;
             RecipedGridView.CellClick += RecipeGridView_CellClick;
-            // 
-            // idDataGridViewTextBoxColumn
-            // 
-            idDataGridViewTextBoxColumn.DataPropertyName = "Id";
-            idDataGridViewTextBoxColumn.HeaderText = "Id";
-            idDataGridViewTextBoxColumn.Name = "idDataGridViewTextBoxColumn";
-            idDataGridViewTextBoxColumn.ReadOnly = true;
-            idDataGridViewTextBoxColumn.Width = 50;
-            // 
-            // yieldDataGridViewTextBoxColumn
-            // 
-            yieldDataGridViewTextBoxColumn.DataPropertyName = "Yield";
-            yieldDataGridViewTextBoxColumn.HeaderText = "Yield";
-            yieldDataGridViewTextBoxColumn.Name = "yieldDataGridViewTextBoxColumn";
-            yieldDataGridViewTextBoxColumn.ReadOnly = true;
-            yieldDataGridViewTextBoxColumn.Width = 50;
-            // 
-            // craftTypeDTODataGridViewTextBoxColumn
-            // 
-            craftTypeDTODataGridViewTextBoxColumn.DataPropertyName = "CraftTypeDTO";
-            craftTypeDTODataGridViewTextBoxColumn.HeaderText = "Type";
-            craftTypeDTODataGridViewTextBoxColumn.Name = "craftTypeDTODataGridViewTextBoxColumn";
-            craftTypeDTODataGridViewTextBoxColumn.ReadOnly = true;
-            craftTypeDTODataGridViewTextBoxColumn.Width = 75;
-            // 
-            // RecipeLevel
-            // 
-            RecipeLevel.DataPropertyName = "RecipeLevel";
-            RecipeLevel.HeaderText = "Recipe Level";
-            RecipeLevel.Name = "RecipeLevel";
-            RecipeLevel.ReadOnly = true;
-            // 
-            // itemDTODataGridViewTextBoxColumn
-            // 
-            itemDTODataGridViewTextBoxColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            itemDTODataGridViewTextBoxColumn.DataPropertyName = "ItemDTO";
-            itemDTODataGridViewTextBoxColumn.HeaderText = "Item Name";
-            itemDTODataGridViewTextBoxColumn.Name = "itemDTODataGridViewTextBoxColumn";
-            itemDTODataGridViewTextBoxColumn.ReadOnly = true;
             // 
             // recipeDTOBindingSource
             // 
@@ -178,6 +141,49 @@
             SearchButton.UseVisualStyleBackColor = true;
             SearchButton.Click += SearchButton_Click;
             // 
+            // recipeBindingSource
+            // 
+            recipeBindingSource.DataSource = typeof(Models.Recipe);
+            // 
+            // idDataGridViewTextBoxColumn
+            // 
+            idDataGridViewTextBoxColumn.DataPropertyName = "Id";
+            idDataGridViewTextBoxColumn.HeaderText = "Id";
+            idDataGridViewTextBoxColumn.Name = "idDataGridViewTextBoxColumn";
+            idDataGridViewTextBoxColumn.ReadOnly = true;
+            idDataGridViewTextBoxColumn.Width = 50;
+            // 
+            // yieldDataGridViewTextBoxColumn
+            // 
+            yieldDataGridViewTextBoxColumn.DataPropertyName = "Yield";
+            yieldDataGridViewTextBoxColumn.HeaderText = "Yield";
+            yieldDataGridViewTextBoxColumn.Name = "yieldDataGridViewTextBoxColumn";
+            yieldDataGridViewTextBoxColumn.ReadOnly = true;
+            yieldDataGridViewTextBoxColumn.Width = 50;
+            // 
+            // CraftType
+            // 
+            CraftType.DataPropertyName = "CraftType";
+            CraftType.HeaderText = "Type";
+            CraftType.Name = "CraftType";
+            CraftType.ReadOnly = true;
+            CraftType.Width = 75;
+            // 
+            // RecipeLevel
+            // 
+            RecipeLevel.DataPropertyName = "RecipeLevel";
+            RecipeLevel.HeaderText = "Recipe Level";
+            RecipeLevel.Name = "RecipeLevel";
+            RecipeLevel.ReadOnly = true;
+            // 
+            // Item
+            // 
+            Item.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            Item.DataPropertyName = "Item";
+            Item.HeaderText = "Name";
+            Item.Name = "Item";
+            Item.ReadOnly = true;
+            // 
             // RecipePicker
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -194,6 +200,7 @@
             Size = new Size(604, 472);
             ((System.ComponentModel.ISupportInitialize)RecipedGridView).EndInit();
             ((System.ComponentModel.ISupportInitialize)recipeDTOBindingSource).EndInit();
+            ((System.ComponentModel.ISupportInitialize)recipeBindingSource).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -208,11 +215,12 @@
         private Label DashLabel;
         private TextBox MaxRecipeLevelTextBox;
         private Label ItemNameLabel;
+        private Button SearchButton;
         private DataGridViewTextBoxColumn idDataGridViewTextBoxColumn;
         private DataGridViewTextBoxColumn yieldDataGridViewTextBoxColumn;
-        private DataGridViewTextBoxColumn craftTypeDTODataGridViewTextBoxColumn;
+        private DataGridViewTextBoxColumn CraftType;
         private DataGridViewTextBoxColumn RecipeLevel;
-        private DataGridViewTextBoxColumn itemDTODataGridViewTextBoxColumn;
-        private Button SearchButton;
+        private DataGridViewTextBoxColumn Item;
+        private BindingSource recipeBindingSource;
     }
 }

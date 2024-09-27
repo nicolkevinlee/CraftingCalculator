@@ -1,20 +1,12 @@
 ﻿using CraftingCalculator.Controls;
-using CraftingCalculator.DTOs;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
+using CraftingCalculator.Data;
+using CraftingCalculator.Models;
 
 namespace CraftingCalculator.Forms
 {
     public partial class RecipePickerForm : Form
     {
-        private RecipeDTO? _selectedRecipe;
+        private Recipe? _selectedRecipe;
 
         public event EventHandler<RecipeAddedEventArgs> RecipeAdded;
 
@@ -33,6 +25,12 @@ namespace CraftingCalculator.Forms
 
             if (success && count > 0 && _selectedRecipe != null)
             {
+                if (_selectedRecipe.Ingredients == null)
+                {
+                    var dbController = new DatabaseController();
+                    _selectedRecipe.Ingredients = dbController.GetRecipeIngredients(_selectedRecipe.Id);
+                }
+
                 RecipeAdded?.Invoke(this, new RecipeAddedEventArgs()
                 {
                     Count = count,
@@ -51,5 +49,5 @@ namespace CraftingCalculator.Forms
 public class RecipeAddedEventArgs : EventArgs
 {
     public uint Count { get; set; }
-    public RecipeDTO SelectedRecipe { get; set; }
+    public Recipe? SelectedRecipe { get; set; }
 }

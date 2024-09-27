@@ -43,4 +43,26 @@ public class RecipeListEntry
         return recipeListEntry;
 
     }
+
+    public RecipeListEntry ToDatabaseEntry()
+    {
+        return new RecipeListEntry
+        {
+            Id = Id,
+            Count = Count,
+            RecipeId = RecipeId,
+            RecipeListId = RecipeListId
+        };
+    }
+
+    public RecipeListEntry ToDatabaseEntry(uint recipeListId)
+    {
+        return new RecipeListEntry
+        {
+            Id = Id,
+            Count = Count,
+            RecipeId = RecipeId,
+            RecipeListId = recipeListId
+        };
+    }
 }

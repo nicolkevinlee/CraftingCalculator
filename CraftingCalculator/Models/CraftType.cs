@@ -7,6 +7,7 @@ public class CraftType
     public uint Id { get; set; }
     public required string Name { get; set; }
     public ICollection<Recipe> Recipes { get; }
+    public override string ToString() => Name;
 
     public static explicit operator CraftType(CraftTypeDTO craftTypeDTO)
     {

@@ -1,13 +1,13 @@
 ﻿using CraftingCalculator.Data;
-using CraftingCalculator.DTOs;
+using CraftingCalculator.Models;
 using System.ComponentModel;
 
 namespace CraftingCalculator.Controls;
 
 public partial class RecipePicker : UserControl
 {
-    private BindingList<RecipeDTO> _filteredRecipes;
-    private RecipeDTO? _selectedRecipe;
+    private BindingList<Recipe> _filteredRecipes;
+    private Recipe? _selectedRecipe;
     private uint _minRecipeLevel;
     private uint _maxRecipeLevel;
     public event EventHandler<RecipeSelectedEventArgs> RecipeSelected;
@@ -15,7 +15,7 @@ public partial class RecipePicker : UserControl
     public RecipePicker()
     {
         _selectedRecipe = null;
-        _filteredRecipes = new BindingList<RecipeDTO>();
+        _filteredRecipes = new BindingList<Recipe>();
         _minRecipeLevel = 0;
         _maxRecipeLevel = 0;
         InitializeComponent();
@@ -24,15 +24,6 @@ public partial class RecipePicker : UserControl
     public void LoadRecipes()
     {
         SearchRecipe();
-    }
-
-    public void DeleteRecipe(RecipeDTO recipe)
-    {
-        var dbController = new DatabaseController();
-        if (dbController.DeleteRecipe(recipe.Id))
-        {
-            _filteredRecipes.Remove(recipe);
-        }
     }
 
     private void RecipeGridView_CellClick(object sender, DataGridViewCellEventArgs e)
@@ -67,7 +58,7 @@ public partial class RecipePicker : UserControl
         _filteredRecipes.Clear();
 
         var dbController = new DatabaseController();
-        List<RecipeDTO> searchResult = dbController.SearchRecipes(_minRecipeLevel, _maxRecipeLevel, searchText);
+        List<Recipe> searchResult = dbController.SearchRecipes(_minRecipeLevel, _maxRecipeLevel, searchText);
         searchResult.ForEach(i =>
         {
             _filteredRecipes.Add(i);
@@ -77,5 +68,5 @@ public partial class RecipePicker : UserControl
 
 public class RecipeSelectedEventArgs : EventArgs
 {
-    public RecipeDTO? SelectedRecipe { get; set; }
+    public Recipe? SelectedRecipe { get; set; }
 }

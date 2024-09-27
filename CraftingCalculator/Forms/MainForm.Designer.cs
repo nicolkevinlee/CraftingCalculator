@@ -1,4 +1,6 @@
-﻿namespace CraftingCalculator.Forms;
+﻿using CraftingCalculator.Models;
+
+namespace CraftingCalculator.Forms;
 
 partial class MainForm
 {
@@ -36,44 +38,50 @@ partial class MainForm
         importToolStripMenuItem = new ToolStripMenuItem();
         tableLayoutPanel1 = new TableLayoutPanel();
         TotalShardsGridView = new DataGridView();
-        nameDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
-        fireCountDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
-        earthCountDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
-        iceCountDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
-        windCountDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
-        lightningCountDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
-        waterCountDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
-        totalShardsBindingSource = new BindingSource(components);
+        dataGridViewTextBoxColumn4 = new DataGridViewTextBoxColumn();
+        dataGridViewTextBoxColumn5 = new DataGridViewTextBoxColumn();
+        dataGridViewTextBoxColumn6 = new DataGridViewTextBoxColumn();
+        dataGridViewTextBoxColumn7 = new DataGridViewTextBoxColumn();
+        dataGridViewTextBoxColumn8 = new DataGridViewTextBoxColumn();
+        dataGridViewTextBoxColumn9 = new DataGridViewTextBoxColumn();
+        dataGridViewTextBoxColumn10 = new DataGridViewTextBoxColumn();
+        totalShardsBindingSource1 = new BindingSource(components);
         SubRecipeListGridView = new DataGridView();
         dataGridViewTextBoxColumn1 = new DataGridViewTextBoxColumn();
         dataGridViewTextBoxColumn2 = new DataGridViewTextBoxColumn();
-        recipeListEntryDTOBindingSource = new BindingSource(components);
+        recipeListEntryBindingSource = new BindingSource(components);
         label4 = new Label();
         AddButton = new Button();
         RemoveButton = new Button();
         LoadButton = new Button();
         SaveButton = new Button();
         RecipeListEntryGridView = new DataGridView();
-        recipeDTODataGridViewTextBoxColumn1 = new DataGridViewTextBoxColumn();
+        Recipe = new DataGridViewTextBoxColumn();
         countDataGridViewTextBoxColumn1 = new DataGridViewTextBoxColumn();
         label2 = new Label();
         label3 = new Label();
         ListNameTextBox = new TextBox();
         TotalIngredientsListView = new DataGridView();
-        itemDTODataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
-        countDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
-        totalIngredientBindingSource = new BindingSource(components);
+        itemDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
+        itemDataGridViewTextBoxColumn1 = new DataGridViewTextBoxColumn();
+        totalIngredientBindingSource1 = new BindingSource(components);
         label1 = new Label();
+        totalShardsBindingSource = new BindingSource(components);
+        totalIngredientBindingSource = new BindingSource(components);
+        recipeListEntryDTOBindingSource = new BindingSource(components);
         ingredientDTOBindingSource = new BindingSource(components);
         menuStrip1.SuspendLayout();
         tableLayoutPanel1.SuspendLayout();
         ((System.ComponentModel.ISupportInitialize)TotalShardsGridView).BeginInit();
-        ((System.ComponentModel.ISupportInitialize)totalShardsBindingSource).BeginInit();
+        ((System.ComponentModel.ISupportInitialize)totalShardsBindingSource1).BeginInit();
         ((System.ComponentModel.ISupportInitialize)SubRecipeListGridView).BeginInit();
-        ((System.ComponentModel.ISupportInitialize)recipeListEntryDTOBindingSource).BeginInit();
+        ((System.ComponentModel.ISupportInitialize)recipeListEntryBindingSource).BeginInit();
         ((System.ComponentModel.ISupportInitialize)RecipeListEntryGridView).BeginInit();
         ((System.ComponentModel.ISupportInitialize)TotalIngredientsListView).BeginInit();
+        ((System.ComponentModel.ISupportInitialize)totalIngredientBindingSource1).BeginInit();
+        ((System.ComponentModel.ISupportInitialize)totalShardsBindingSource).BeginInit();
         ((System.ComponentModel.ISupportInitialize)totalIngredientBindingSource).BeginInit();
+        ((System.ComponentModel.ISupportInitialize)recipeListEntryDTOBindingSource).BeginInit();
         ((System.ComponentModel.ISupportInitialize)ingredientDTOBindingSource).BeginInit();
         SuspendLayout();
         // 
@@ -148,7 +156,7 @@ partial class MainForm
         tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 30F));
         tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 34.6534653F));
         tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 110F));
-        tableLayoutPanel1.Size = new Size(560, 568);
+        tableLayoutPanel1.Size = new Size(560, 574);
         tableLayoutPanel1.TabIndex = 1;
         // 
         // TotalShardsGridView
@@ -160,11 +168,11 @@ partial class MainForm
         TotalShardsGridView.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
         TotalShardsGridView.AutoGenerateColumns = false;
         TotalShardsGridView.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-        TotalShardsGridView.Columns.AddRange(new DataGridViewColumn[] { nameDataGridViewTextBoxColumn, fireCountDataGridViewTextBoxColumn, earthCountDataGridViewTextBoxColumn, iceCountDataGridViewTextBoxColumn, windCountDataGridViewTextBoxColumn, lightningCountDataGridViewTextBoxColumn, waterCountDataGridViewTextBoxColumn });
+        TotalShardsGridView.Columns.AddRange(new DataGridViewColumn[] { dataGridViewTextBoxColumn4, dataGridViewTextBoxColumn5, dataGridViewTextBoxColumn6, dataGridViewTextBoxColumn7, dataGridViewTextBoxColumn8, dataGridViewTextBoxColumn9, dataGridViewTextBoxColumn10 });
         tableLayoutPanel1.SetColumnSpan(TotalShardsGridView, 6);
-        TotalShardsGridView.DataSource = totalShardsBindingSource;
+        TotalShardsGridView.DataSource = totalShardsBindingSource1;
         TotalShardsGridView.Enabled = false;
-        TotalShardsGridView.Location = new Point(3, 460);
+        TotalShardsGridView.Location = new Point(3, 466);
         TotalShardsGridView.Name = "TotalShardsGridView";
         TotalShardsGridView.ReadOnly = true;
         TotalShardsGridView.RowHeadersVisible = false;
@@ -172,65 +180,64 @@ partial class MainForm
         TotalShardsGridView.TabIndex = 11;
         TotalShardsGridView.SelectionChanged += GridView_SelectionChanged;
         // 
-        // nameDataGridViewTextBoxColumn
+        // dataGridViewTextBoxColumn4
         // 
-        nameDataGridViewTextBoxColumn.DataPropertyName = "Name";
-        nameDataGridViewTextBoxColumn.HeaderText = "Name";
-        nameDataGridViewTextBoxColumn.Name = "nameDataGridViewTextBoxColumn";
-        nameDataGridViewTextBoxColumn.ReadOnly = true;
-        nameDataGridViewTextBoxColumn.Width = 80;
+        dataGridViewTextBoxColumn4.DataPropertyName = "Name";
+        dataGridViewTextBoxColumn4.HeaderText = "Name";
+        dataGridViewTextBoxColumn4.Name = "dataGridViewTextBoxColumn4";
+        dataGridViewTextBoxColumn4.ReadOnly = true;
         // 
-        // fireCountDataGridViewTextBoxColumn
+        // dataGridViewTextBoxColumn5
         // 
-        fireCountDataGridViewTextBoxColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-        fireCountDataGridViewTextBoxColumn.DataPropertyName = "FireCount";
-        fireCountDataGridViewTextBoxColumn.HeaderText = "Fire";
-        fireCountDataGridViewTextBoxColumn.Name = "fireCountDataGridViewTextBoxColumn";
-        fireCountDataGridViewTextBoxColumn.ReadOnly = true;
+        dataGridViewTextBoxColumn5.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+        dataGridViewTextBoxColumn5.DataPropertyName = "FireCount";
+        dataGridViewTextBoxColumn5.HeaderText = "Fire";
+        dataGridViewTextBoxColumn5.Name = "dataGridViewTextBoxColumn5";
+        dataGridViewTextBoxColumn5.ReadOnly = true;
         // 
-        // earthCountDataGridViewTextBoxColumn
+        // dataGridViewTextBoxColumn6
         // 
-        earthCountDataGridViewTextBoxColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-        earthCountDataGridViewTextBoxColumn.DataPropertyName = "EarthCount";
-        earthCountDataGridViewTextBoxColumn.HeaderText = "Earth";
-        earthCountDataGridViewTextBoxColumn.Name = "earthCountDataGridViewTextBoxColumn";
-        earthCountDataGridViewTextBoxColumn.ReadOnly = true;
+        dataGridViewTextBoxColumn6.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+        dataGridViewTextBoxColumn6.DataPropertyName = "EarthCount";
+        dataGridViewTextBoxColumn6.HeaderText = "Earth";
+        dataGridViewTextBoxColumn6.Name = "dataGridViewTextBoxColumn6";
+        dataGridViewTextBoxColumn6.ReadOnly = true;
         // 
-        // iceCountDataGridViewTextBoxColumn
+        // dataGridViewTextBoxColumn7
         // 
-        iceCountDataGridViewTextBoxColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-        iceCountDataGridViewTextBoxColumn.DataPropertyName = "IceCount";
-        iceCountDataGridViewTextBoxColumn.HeaderText = "Ice";
-        iceCountDataGridViewTextBoxColumn.Name = "iceCountDataGridViewTextBoxColumn";
-        iceCountDataGridViewTextBoxColumn.ReadOnly = true;
+        dataGridViewTextBoxColumn7.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+        dataGridViewTextBoxColumn7.DataPropertyName = "IceCount";
+        dataGridViewTextBoxColumn7.HeaderText = "Ice";
+        dataGridViewTextBoxColumn7.Name = "dataGridViewTextBoxColumn7";
+        dataGridViewTextBoxColumn7.ReadOnly = true;
         // 
-        // windCountDataGridViewTextBoxColumn
+        // dataGridViewTextBoxColumn8
         // 
-        windCountDataGridViewTextBoxColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-        windCountDataGridViewTextBoxColumn.DataPropertyName = "WindCount";
-        windCountDataGridViewTextBoxColumn.HeaderText = "Wind";
-        windCountDataGridViewTextBoxColumn.Name = "windCountDataGridViewTextBoxColumn";
-        windCountDataGridViewTextBoxColumn.ReadOnly = true;
+        dataGridViewTextBoxColumn8.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+        dataGridViewTextBoxColumn8.DataPropertyName = "WindCount";
+        dataGridViewTextBoxColumn8.HeaderText = "Wind";
+        dataGridViewTextBoxColumn8.Name = "dataGridViewTextBoxColumn8";
+        dataGridViewTextBoxColumn8.ReadOnly = true;
         // 
-        // lightningCountDataGridViewTextBoxColumn
+        // dataGridViewTextBoxColumn9
         // 
-        lightningCountDataGridViewTextBoxColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-        lightningCountDataGridViewTextBoxColumn.DataPropertyName = "LightningCount";
-        lightningCountDataGridViewTextBoxColumn.HeaderText = "Lightning";
-        lightningCountDataGridViewTextBoxColumn.Name = "lightningCountDataGridViewTextBoxColumn";
-        lightningCountDataGridViewTextBoxColumn.ReadOnly = true;
+        dataGridViewTextBoxColumn9.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+        dataGridViewTextBoxColumn9.DataPropertyName = "LightningCount";
+        dataGridViewTextBoxColumn9.HeaderText = "Lightning";
+        dataGridViewTextBoxColumn9.Name = "dataGridViewTextBoxColumn9";
+        dataGridViewTextBoxColumn9.ReadOnly = true;
         // 
-        // waterCountDataGridViewTextBoxColumn
+        // dataGridViewTextBoxColumn10
         // 
-        waterCountDataGridViewTextBoxColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-        waterCountDataGridViewTextBoxColumn.DataPropertyName = "WaterCount";
-        waterCountDataGridViewTextBoxColumn.HeaderText = "Water";
-        waterCountDataGridViewTextBoxColumn.Name = "waterCountDataGridViewTextBoxColumn";
-        waterCountDataGridViewTextBoxColumn.ReadOnly = true;
+        dataGridViewTextBoxColumn10.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+        dataGridViewTextBoxColumn10.DataPropertyName = "WaterCount";
+        dataGridViewTextBoxColumn10.HeaderText = "Water";
+        dataGridViewTextBoxColumn10.Name = "dataGridViewTextBoxColumn10";
+        dataGridViewTextBoxColumn10.ReadOnly = true;
         // 
-        // totalShardsBindingSource
+        // totalShardsBindingSource1
         // 
-        totalShardsBindingSource.DataSource = typeof(DTOs.TotalShards);
+        totalShardsBindingSource1.DataSource = typeof(TotalShards);
         // 
         // SubRecipeListGridView
         // 
@@ -243,20 +250,20 @@ partial class MainForm
         SubRecipeListGridView.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
         SubRecipeListGridView.Columns.AddRange(new DataGridViewColumn[] { dataGridViewTextBoxColumn1, dataGridViewTextBoxColumn2 });
         tableLayoutPanel1.SetColumnSpan(SubRecipeListGridView, 6);
-        SubRecipeListGridView.DataSource = recipeListEntryDTOBindingSource;
-        SubRecipeListGridView.Location = new Point(3, 203);
+        SubRecipeListGridView.DataSource = recipeListEntryBindingSource;
+        SubRecipeListGridView.Location = new Point(3, 205);
         SubRecipeListGridView.Name = "SubRecipeListGridView";
         SubRecipeListGridView.ReadOnly = true;
         SubRecipeListGridView.RowHeadersVisible = false;
         SubRecipeListGridView.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-        SubRecipeListGridView.Size = new Size(554, 104);
+        SubRecipeListGridView.Size = new Size(554, 106);
         SubRecipeListGridView.TabIndex = 10;
         SubRecipeListGridView.SelectionChanged += GridView_SelectionChanged;
         // 
         // dataGridViewTextBoxColumn1
         // 
         dataGridViewTextBoxColumn1.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-        dataGridViewTextBoxColumn1.DataPropertyName = "RecipeDTO";
+        dataGridViewTextBoxColumn1.DataPropertyName = "Recipe";
         dataGridViewTextBoxColumn1.HeaderText = "Recipe";
         dataGridViewTextBoxColumn1.Name = "dataGridViewTextBoxColumn1";
         dataGridViewTextBoxColumn1.ReadOnly = true;
@@ -269,9 +276,9 @@ partial class MainForm
         dataGridViewTextBoxColumn2.ReadOnly = true;
         dataGridViewTextBoxColumn2.Width = 75;
         // 
-        // recipeListEntryDTOBindingSource
+        // recipeListEntryBindingSource
         // 
-        recipeListEntryDTOBindingSource.DataSource = typeof(DTOs.RecipeListEntryDTO);
+        recipeListEntryBindingSource.DataSource = typeof(RecipeListEntry);
         // 
         // label4
         // 
@@ -279,7 +286,7 @@ partial class MainForm
         label4.AutoSize = true;
         tableLayoutPanel1.SetColumnSpan(label4, 6);
         label4.Font = new Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
-        label4.Location = new Point(3, 170);
+        label4.Location = new Point(3, 172);
         label4.Name = "label4";
         label4.Size = new Size(554, 30);
         label4.TabIndex = 7;
@@ -343,26 +350,26 @@ partial class MainForm
         RecipeListEntryGridView.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
         RecipeListEntryGridView.AutoGenerateColumns = false;
         RecipeListEntryGridView.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-        RecipeListEntryGridView.Columns.AddRange(new DataGridViewColumn[] { recipeDTODataGridViewTextBoxColumn1, countDataGridViewTextBoxColumn1 });
+        RecipeListEntryGridView.Columns.AddRange(new DataGridViewColumn[] { Recipe, countDataGridViewTextBoxColumn1 });
         tableLayoutPanel1.SetColumnSpan(RecipeListEntryGridView, 6);
-        RecipeListEntryGridView.DataSource = recipeListEntryDTOBindingSource;
+        RecipeListEntryGridView.DataSource = recipeListEntryBindingSource;
         RecipeListEntryGridView.EditMode = DataGridViewEditMode.EditProgrammatically;
         RecipeListEntryGridView.Location = new Point(3, 63);
         RecipeListEntryGridView.Name = "RecipeListEntryGridView";
         RecipeListEntryGridView.ReadOnly = true;
         RecipeListEntryGridView.RowHeadersVisible = false;
         RecipeListEntryGridView.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-        RecipeListEntryGridView.Size = new Size(554, 104);
+        RecipeListEntryGridView.Size = new Size(554, 106);
         RecipeListEntryGridView.TabIndex = 4;
         RecipeListEntryGridView.CellClick += RecipeListEntryGridView_CellClick;
         // 
-        // recipeDTODataGridViewTextBoxColumn1
+        // Recipe
         // 
-        recipeDTODataGridViewTextBoxColumn1.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-        recipeDTODataGridViewTextBoxColumn1.DataPropertyName = "RecipeDTO";
-        recipeDTODataGridViewTextBoxColumn1.HeaderText = "Recipe";
-        recipeDTODataGridViewTextBoxColumn1.Name = "recipeDTODataGridViewTextBoxColumn1";
-        recipeDTODataGridViewTextBoxColumn1.ReadOnly = true;
+        Recipe.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+        Recipe.DataPropertyName = "Recipe";
+        Recipe.HeaderText = "Recipe";
+        Recipe.Name = "Recipe";
+        Recipe.ReadOnly = true;
         // 
         // countDataGridViewTextBoxColumn1
         // 
@@ -415,36 +422,36 @@ partial class MainForm
         TotalIngredientsListView.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
         TotalIngredientsListView.AutoGenerateColumns = false;
         TotalIngredientsListView.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-        TotalIngredientsListView.Columns.AddRange(new DataGridViewColumn[] { itemDTODataGridViewTextBoxColumn, countDataGridViewTextBoxColumn });
+        TotalIngredientsListView.Columns.AddRange(new DataGridViewColumn[] { itemDataGridViewTextBoxColumn, itemDataGridViewTextBoxColumn1 });
         tableLayoutPanel1.SetColumnSpan(TotalIngredientsListView, 6);
-        TotalIngredientsListView.DataSource = totalIngredientBindingSource;
-        TotalIngredientsListView.Location = new Point(3, 343);
+        TotalIngredientsListView.DataSource = totalIngredientBindingSource1;
+        TotalIngredientsListView.Location = new Point(3, 347);
         TotalIngredientsListView.Name = "TotalIngredientsListView";
         TotalIngredientsListView.ReadOnly = true;
         TotalIngredientsListView.RowHeadersVisible = false;
-        TotalIngredientsListView.Size = new Size(554, 111);
+        TotalIngredientsListView.Size = new Size(554, 113);
         TotalIngredientsListView.TabIndex = 5;
         TotalIngredientsListView.SelectionChanged += GridView_SelectionChanged;
         // 
-        // itemDTODataGridViewTextBoxColumn
+        // itemDataGridViewTextBoxColumn
         // 
-        itemDTODataGridViewTextBoxColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-        itemDTODataGridViewTextBoxColumn.DataPropertyName = "ItemDTO";
-        itemDTODataGridViewTextBoxColumn.HeaderText = "Ingredient";
-        itemDTODataGridViewTextBoxColumn.Name = "itemDTODataGridViewTextBoxColumn";
-        itemDTODataGridViewTextBoxColumn.ReadOnly = true;
+        itemDataGridViewTextBoxColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+        itemDataGridViewTextBoxColumn.DataPropertyName = "Item";
+        itemDataGridViewTextBoxColumn.HeaderText = "Item";
+        itemDataGridViewTextBoxColumn.Name = "itemDataGridViewTextBoxColumn";
+        itemDataGridViewTextBoxColumn.ReadOnly = true;
         // 
-        // countDataGridViewTextBoxColumn
+        // itemDataGridViewTextBoxColumn1
         // 
-        countDataGridViewTextBoxColumn.DataPropertyName = "Count";
-        countDataGridViewTextBoxColumn.HeaderText = "Total";
-        countDataGridViewTextBoxColumn.Name = "countDataGridViewTextBoxColumn";
-        countDataGridViewTextBoxColumn.ReadOnly = true;
-        countDataGridViewTextBoxColumn.Width = 75;
+        itemDataGridViewTextBoxColumn1.DataPropertyName = "Count";
+        itemDataGridViewTextBoxColumn1.HeaderText = "Total";
+        itemDataGridViewTextBoxColumn1.Name = "itemDataGridViewTextBoxColumn1";
+        itemDataGridViewTextBoxColumn1.ReadOnly = true;
+        itemDataGridViewTextBoxColumn1.Width = 75;
         // 
-        // totalIngredientBindingSource
+        // totalIngredientBindingSource1
         // 
-        totalIngredientBindingSource.DataSource = typeof(DTOs.TotalIngredient);
+        totalIngredientBindingSource1.DataSource = typeof(TotalIngredient);
         // 
         // label1
         // 
@@ -452,12 +459,16 @@ partial class MainForm
         label1.AutoSize = true;
         tableLayoutPanel1.SetColumnSpan(label1, 6);
         label1.Font = new Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
-        label1.Location = new Point(3, 310);
+        label1.Location = new Point(3, 314);
         label1.Name = "label1";
         label1.Size = new Size(554, 30);
         label1.TabIndex = 6;
         label1.Text = "Total Ingredients";
         label1.TextAlign = ContentAlignment.MiddleLeft;
+        // 
+        // recipeListEntryDTOBindingSource
+        // 
+        recipeListEntryDTOBindingSource.DataSource = typeof(DTOs.RecipeListEntryDTO);
         // 
         // ingredientDTOBindingSource
         // 
@@ -467,7 +478,7 @@ partial class MainForm
         // 
         AutoScaleDimensions = new SizeF(7F, 15F);
         AutoScaleMode = AutoScaleMode.Font;
-        ClientSize = new Size(584, 607);
+        ClientSize = new Size(584, 613);
         Controls.Add(tableLayoutPanel1);
         Controls.Add(menuStrip1);
         MainMenuStrip = menuStrip1;
@@ -479,12 +490,15 @@ partial class MainForm
         tableLayoutPanel1.ResumeLayout(false);
         tableLayoutPanel1.PerformLayout();
         ((System.ComponentModel.ISupportInitialize)TotalShardsGridView).EndInit();
-        ((System.ComponentModel.ISupportInitialize)totalShardsBindingSource).EndInit();
+        ((System.ComponentModel.ISupportInitialize)totalShardsBindingSource1).EndInit();
         ((System.ComponentModel.ISupportInitialize)SubRecipeListGridView).EndInit();
-        ((System.ComponentModel.ISupportInitialize)recipeListEntryDTOBindingSource).EndInit();
+        ((System.ComponentModel.ISupportInitialize)recipeListEntryBindingSource).EndInit();
         ((System.ComponentModel.ISupportInitialize)RecipeListEntryGridView).EndInit();
         ((System.ComponentModel.ISupportInitialize)TotalIngredientsListView).EndInit();
+        ((System.ComponentModel.ISupportInitialize)totalIngredientBindingSource1).EndInit();
+        ((System.ComponentModel.ISupportInitialize)totalShardsBindingSource).EndInit();
         ((System.ComponentModel.ISupportInitialize)totalIngredientBindingSource).EndInit();
+        ((System.ComponentModel.ISupportInitialize)recipeListEntryDTOBindingSource).EndInit();
         ((System.ComponentModel.ISupportInitialize)ingredientDTOBindingSource).EndInit();
         ResumeLayout(false);
         PerformLayout();
@@ -509,14 +523,10 @@ partial class MainForm
     private Label label3;
     private TextBox ListNameTextBox;
     private BindingSource ingredientDTOBindingSource;
-    private DataGridViewTextBoxColumn recipeDTODataGridViewTextBoxColumn1;
-    private DataGridViewTextBoxColumn countDataGridViewTextBoxColumn1;
     private BindingSource recipeListEntryDTOBindingSource;
     private DataGridViewTextBoxColumn itemDTODataGridViewTextBoxColumn;
     private DataGridViewTextBoxColumn countDataGridViewTextBoxColumn;
     private DataGridView SubRecipeListGridView;
-    private DataGridViewTextBoxColumn dataGridViewTextBoxColumn1;
-    private DataGridViewTextBoxColumn dataGridViewTextBoxColumn2;
     private Label label4;
     private DataGridView TotalShardsGridView;
     private DataGridViewTextBoxColumn nameDataGridViewTextBoxColumn;
@@ -528,4 +538,21 @@ partial class MainForm
     private DataGridViewTextBoxColumn waterCountDataGridViewTextBoxColumn;
     private BindingSource totalShardsBindingSource;
     private BindingSource totalIngredientBindingSource;
+    private DataGridViewTextBoxColumn Recipe;
+    private DataGridViewTextBoxColumn countDataGridViewTextBoxColumn1;
+    private BindingSource recipeListEntryBindingSource;
+    private DataGridViewTextBoxColumn dataGridViewTextBoxColumn1;
+    private DataGridViewTextBoxColumn dataGridViewTextBoxColumn2;
+    private DataGridViewTextBoxColumn dataGridViewTextBoxColumn4;
+    private DataGridViewTextBoxColumn dataGridViewTextBoxColumn5;
+    private DataGridViewTextBoxColumn dataGridViewTextBoxColumn6;
+    private DataGridViewTextBoxColumn dataGridViewTextBoxColumn7;
+    private DataGridViewTextBoxColumn dataGridViewTextBoxColumn8;
+    private DataGridViewTextBoxColumn dataGridViewTextBoxColumn9;
+    private DataGridViewTextBoxColumn dataGridViewTextBoxColumn10;
+    private BindingSource totalShardsBindingSource1;
+    private DataGridViewTextBoxColumn dataGridViewTextBoxColumn3;
+    private BindingSource totalIngredientBindingSource1;
+    private DataGridViewTextBoxColumn itemDataGridViewTextBoxColumn;
+    private DataGridViewTextBoxColumn itemDataGridViewTextBoxColumn1;
 }

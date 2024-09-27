@@ -1,11 +1,12 @@
 ﻿using CraftingCalculator.Controls;
-using CraftingCalculator.DTOs;
+using CraftingCalculator.Data;
+using CraftingCalculator.Models;
 
 namespace CraftingCalculator.Forms;
 
 public partial class ViewRecipesForm : Form
 {
-    private RecipeDTO? _selectedRecipe;
+    private Recipe? _selectedRecipe;
     public ViewRecipesForm()
     {
         _selectedRecipe = null;
@@ -22,6 +23,12 @@ public partial class ViewRecipesForm : Form
     {
 
         if (_selectedRecipe == null) return;
+
+        if(_selectedRecipe.Ingredients == null)
+        {
+            var dbController = new DatabaseController();
+            _selectedRecipe.Ingredients = dbController.GetRecipeIngredients(_selectedRecipe.Id);
+        }
 
         var viewSingleRecipeForm = new ViewSingleRecipeForm(_selectedRecipe);
         viewSingleRecipeForm.ShowDialog();
