@@ -12,5 +12,5 @@ public record CalculatorResult
 {
     public required List<RecipeListEntry> SubRecipeListEntries { get; init; }
     public required List<TotalIngredient> TotalIngredients { get; init; }
-    public required List<TotalShards> TotalShards { get; init; }
+    public required List<TotalCrystals> TotalShards { get; init; }
 }

@@ -1,12 +1,16 @@
 ﻿using CraftingCalculator.DTOs;
+using CraftingCalculator.Enums;
 using CraftingCalculator.Models;
 using Microsoft.EntityFrameworkCore;
 using System.DirectoryServices;
+using static Azure.Core.HttpHeader;
 
 namespace CraftingCalculator.Data;
 
 public class DatabaseController
 {
+    private static Dictionary<Crystal, Dictionary<Element, Item>>? _allCrystals = null;
+
     public Recipe? GetRecipe(uint itemId)
     {
         Recipe? recipe = null;
@@ -98,6 +102,46 @@ public class DatabaseController
 
             return searchResult;
         }
+    }
+
+    public Dictionary<Crystal, Dictionary<Element, Item>> GetAllCrystals()
+    {
+        if (_allCrystals != null) return _allCrystals;
+
+        var elements = Enum.GetValues(typeof(Element)).Cast<Element>();
+        var crystals = Enum.GetValues(typeof(Crystal)).Cast<Crystal>();
+
+        Dictionary<Crystal, Dictionary<Element, string>> crystalNames = new Dictionary<Crystal, Dictionary<Element, string>>();
+
+        foreach (var crystal in crystals)
+        {
+            var names = new Dictionary<Element, string>();
+            foreach(var element in elements)
+            {
+                if (element == Element.None) continue;
+                names.Add(element, $"{element} {crystal}");
+            }
+            crystalNames.Add(crystal, names);
+        }
+
+        Dictionary<Crystal, Dictionary<Element, Item>> result = new Dictionary<Crystal, Dictionary<Element, Item>>();
+        using(var dbContext = new CraftingDbContext())
+        {
+            foreach(KeyValuePair<Crystal, Dictionary<Element, string>> ckvp in crystalNames)
+            {
+                var items = new Dictionary<Element, Item>();
+                foreach (KeyValuePair<Element, string> ekvp in ckvp.Value)
+                {
+                    var item = dbContext.Items.FirstOrDefault(i => i.Name == ekvp.Value);
+                    if(item != null) items[ekvp.Key] = item;
+                }
+                result.Add(ckvp.Key, items);
+            }
+        }
+
+        _allCrystals = result;
+
+        return result;
     }
 
     public List<RecipeListEntry>? GetRecipeListEntries(uint recipeListId)

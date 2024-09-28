@@ -8,7 +8,7 @@ namespace CraftingCalculator.Data;
 class RecipeImporter : IImporter
 {
 
-    public event EventHandler<StatusUpdatedEventArgs> StatusUpdated;
+    public event EventHandler<StatusUpdatedEventArgs>? StatusUpdated;
 
     public Task ImportRecipesToDb(List<ItemDTO> itemDTOs, List<CraftTypeDTO> craftTypeDTOs, List<RecipeDTO> recipeDTOs, List<IngredientDTO> ingredientDTOs)
     {

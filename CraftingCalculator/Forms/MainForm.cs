@@ -8,12 +8,10 @@ namespace CraftingCalculator.Forms;
 
 public partial class MainForm : Form
 {
-    private static readonly uint[] _shardIds = { 4, 1395, 1427, 7, 1400, 1430, 231, 1455, 1487, 357, 1515, 1538, 508, 1597, 1628, 975, 1758, 1771 };
-
     private BindingList<RecipeListEntry> _recipeListEntries;
     private BindingList<RecipeListEntry> _subRecipeEntries;
     private BindingList<TotalIngredient> _totalIngredients;
-    private BindingList<TotalShards> _totalShards;
+    private BindingList<TotalCrystals> _totalShards;
 
     private RecipeListEntry? _selectedRecipeListEntry;
     private RecipeList? _currentRecipeList;
@@ -25,12 +23,7 @@ public partial class MainForm : Form
         _recipeListEntries = new BindingList<RecipeListEntry>();
         _subRecipeEntries = new BindingList<RecipeListEntry>();
         _totalIngredients = new BindingList<TotalIngredient>();
-        _totalShards = new BindingList<TotalShards>();
-
-        for (int i = 0; i < 3; i++)
-        {
-            _totalShards.Add(new TotalShards(i));
-        }
+        _totalShards = new BindingList<TotalCrystals>();
 
         InitializeComponent();
 
@@ -91,10 +84,6 @@ public partial class MainForm : Form
             Recipe = recipe,
             Count = count
         };
-        /*
-        var dbController = new DatabaseController();
-        var ingredients = dbController.GetRecipeIngredients(recipe.Id);
-        recipeListEntry.Recipe.Ingredients = ingredients;*/
 
         return recipeListEntry;
     }
@@ -111,7 +100,7 @@ public partial class MainForm : Form
 
         _subRecipeEntries = new BindingList<RecipeListEntry>(result.SubRecipeListEntries);
         _totalIngredients = new BindingList<TotalIngredient>(result.TotalIngredients);
-        _totalShards = new BindingList<TotalShards>(result.TotalShards);
+        _totalShards = new BindingList<TotalCrystals>(result.TotalShards);
 
         SubRecipeListGridView.DataSource = _subRecipeEntries;
         TotalIngredientsListView.DataSource = _totalIngredients;

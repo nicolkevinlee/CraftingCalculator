@@ -1,11 +1,33 @@
-﻿using CraftingCalculator.Models;
+﻿using CraftingCalculator.Enums;
+using CraftingCalculator.Models;
 
 namespace CraftingCalculator.Data;
 
 public class CraftCalculator
 {
 
-    private static readonly uint[] _shardIds = { 4, 1395, 1427, 7, 1400, 1430, 231, 1455, 1487, 357, 1515, 1538, 508, 1597, 1628, 975, 1758, 1771 };
+    private static uint[]? _shardIds;
+
+    public CraftCalculator() 
+    {
+        if (_shardIds != null) return;
+
+        var dbController = new DatabaseController();
+        var allCrystals = dbController.GetAllCrystals();
+        var crystalCount = Enum.GetNames(typeof(Crystal)).Length;
+        var elementCount = Enum.GetNames(typeof(Element)).Length - 1;
+
+        _shardIds = new uint[crystalCount * elementCount];
+        var shardIndex = 0;
+        foreach( var crystals in allCrystals )
+        {
+            foreach( var item in crystals.Value ) 
+            {
+                _shardIds[shardIndex] = item.Value.Id;
+                shardIndex++;
+            }
+        }
+    }
 
     public CalculatorResult CalculateTotalIngredients(List<RecipeListEntry> recipeListEntries)
     {
@@ -150,15 +172,13 @@ public class CraftCalculator
         };
     }
 
-    private List<TotalShards> GetTotalShards(List<TotalIngredient> totalIngredients)
+    private List<TotalCrystals> GetTotalShards(List<TotalIngredient> totalIngredients)
     {
-        List<TotalShards> totalShards = new List<TotalShards>();
+        
+        var crystals = Enum.GetValues(typeof(Crystal)).Cast<Crystal>();
+        List<TotalCrystals> totalShards = crystals.Select(c => new TotalCrystals(c)).ToList();
 
-        for (int i = 0; i < 3; i++)
-        {
-            totalShards.Add(new TotalShards(i));
-        }
-        var shards = totalIngredients.Where(i => _shardIds.Contains(i.Item.Id)).ToList();
+        var shards = totalIngredients.Where(i => _shardIds!.Contains(i.Item.Id)).ToList();
 
         foreach (var item in shards)
         {

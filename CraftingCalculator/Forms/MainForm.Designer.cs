@@ -38,13 +38,6 @@ partial class MainForm
         importToolStripMenuItem = new ToolStripMenuItem();
         tableLayoutPanel1 = new TableLayoutPanel();
         TotalShardsGridView = new DataGridView();
-        dataGridViewTextBoxColumn4 = new DataGridViewTextBoxColumn();
-        dataGridViewTextBoxColumn5 = new DataGridViewTextBoxColumn();
-        dataGridViewTextBoxColumn6 = new DataGridViewTextBoxColumn();
-        dataGridViewTextBoxColumn7 = new DataGridViewTextBoxColumn();
-        dataGridViewTextBoxColumn8 = new DataGridViewTextBoxColumn();
-        dataGridViewTextBoxColumn9 = new DataGridViewTextBoxColumn();
-        dataGridViewTextBoxColumn10 = new DataGridViewTextBoxColumn();
         totalShardsBindingSource1 = new BindingSource(components);
         SubRecipeListGridView = new DataGridView();
         dataGridViewTextBoxColumn1 = new DataGridViewTextBoxColumn();
@@ -168,7 +161,6 @@ partial class MainForm
         TotalShardsGridView.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
         TotalShardsGridView.AutoGenerateColumns = false;
         TotalShardsGridView.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-        TotalShardsGridView.Columns.AddRange(new DataGridViewColumn[] { dataGridViewTextBoxColumn4, dataGridViewTextBoxColumn5, dataGridViewTextBoxColumn6, dataGridViewTextBoxColumn7, dataGridViewTextBoxColumn8, dataGridViewTextBoxColumn9, dataGridViewTextBoxColumn10 });
         tableLayoutPanel1.SetColumnSpan(TotalShardsGridView, 6);
         TotalShardsGridView.DataSource = totalShardsBindingSource1;
         TotalShardsGridView.Enabled = false;
@@ -179,65 +171,6 @@ partial class MainForm
         TotalShardsGridView.Size = new Size(554, 105);
         TotalShardsGridView.TabIndex = 11;
         TotalShardsGridView.SelectionChanged += GridView_SelectionChanged;
-        // 
-        // dataGridViewTextBoxColumn4
-        // 
-        dataGridViewTextBoxColumn4.DataPropertyName = "Name";
-        dataGridViewTextBoxColumn4.HeaderText = "Name";
-        dataGridViewTextBoxColumn4.Name = "dataGridViewTextBoxColumn4";
-        dataGridViewTextBoxColumn4.ReadOnly = true;
-        // 
-        // dataGridViewTextBoxColumn5
-        // 
-        dataGridViewTextBoxColumn5.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-        dataGridViewTextBoxColumn5.DataPropertyName = "FireCount";
-        dataGridViewTextBoxColumn5.HeaderText = "Fire";
-        dataGridViewTextBoxColumn5.Name = "dataGridViewTextBoxColumn5";
-        dataGridViewTextBoxColumn5.ReadOnly = true;
-        // 
-        // dataGridViewTextBoxColumn6
-        // 
-        dataGridViewTextBoxColumn6.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-        dataGridViewTextBoxColumn6.DataPropertyName = "EarthCount";
-        dataGridViewTextBoxColumn6.HeaderText = "Earth";
-        dataGridViewTextBoxColumn6.Name = "dataGridViewTextBoxColumn6";
-        dataGridViewTextBoxColumn6.ReadOnly = true;
-        // 
-        // dataGridViewTextBoxColumn7
-        // 
-        dataGridViewTextBoxColumn7.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-        dataGridViewTextBoxColumn7.DataPropertyName = "IceCount";
-        dataGridViewTextBoxColumn7.HeaderText = "Ice";
-        dataGridViewTextBoxColumn7.Name = "dataGridViewTextBoxColumn7";
-        dataGridViewTextBoxColumn7.ReadOnly = true;
-        // 
-        // dataGridViewTextBoxColumn8
-        // 
-        dataGridViewTextBoxColumn8.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-        dataGridViewTextBoxColumn8.DataPropertyName = "WindCount";
-        dataGridViewTextBoxColumn8.HeaderText = "Wind";
-        dataGridViewTextBoxColumn8.Name = "dataGridViewTextBoxColumn8";
-        dataGridViewTextBoxColumn8.ReadOnly = true;
-        // 
-        // dataGridViewTextBoxColumn9
-        // 
-        dataGridViewTextBoxColumn9.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-        dataGridViewTextBoxColumn9.DataPropertyName = "LightningCount";
-        dataGridViewTextBoxColumn9.HeaderText = "Lightning";
-        dataGridViewTextBoxColumn9.Name = "dataGridViewTextBoxColumn9";
-        dataGridViewTextBoxColumn9.ReadOnly = true;
-        // 
-        // dataGridViewTextBoxColumn10
-        // 
-        dataGridViewTextBoxColumn10.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-        dataGridViewTextBoxColumn10.DataPropertyName = "WaterCount";
-        dataGridViewTextBoxColumn10.HeaderText = "Water";
-        dataGridViewTextBoxColumn10.Name = "dataGridViewTextBoxColumn10";
-        dataGridViewTextBoxColumn10.ReadOnly = true;
-        // 
-        // totalShardsBindingSource1
-        // 
-        totalShardsBindingSource1.DataSource = typeof(TotalShards);
         // 
         // SubRecipeListGridView
         // 
