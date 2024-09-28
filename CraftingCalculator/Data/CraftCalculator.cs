@@ -6,25 +6,25 @@ namespace CraftingCalculator.Data;
 public class CraftCalculator
 {
 
-    private static uint[]? _shardIds;
+    private static uint[]? _crystalIds;
 
     public CraftCalculator() 
     {
-        if (_shardIds != null) return;
+        if (_crystalIds != null) return;
 
         var dbController = new DatabaseController();
         var allCrystals = dbController.GetAllCrystals();
         var crystalCount = Enum.GetNames(typeof(Crystal)).Length;
         var elementCount = Enum.GetNames(typeof(Element)).Length - 1;
 
-        _shardIds = new uint[crystalCount * elementCount];
-        var shardIndex = 0;
+        _crystalIds = new uint[crystalCount * elementCount];
+        var crystalIndex = 0;
         foreach( var crystals in allCrystals )
         {
             foreach( var item in crystals.Value ) 
             {
-                _shardIds[shardIndex] = item.Value.Id;
-                shardIndex++;
+                _crystalIds[crystalIndex] = item.Value.Id;
+                crystalIndex++;
             }
         }
     }
@@ -35,13 +35,13 @@ public class CraftCalculator
         var result = GetSubCrafts(recipeListEntries);
         var subRecipeEntries = GetSuperSubCrafts(result.Item1);
         var totalIngredients = GetSubCraftIngredients(result.Item1, result.Item2);
-        var totalShards = GetTotalShards(totalIngredients);
+        var totalCrystals = GetTotalCrystals(totalIngredients);
 
         return new CalculatorResult 
         { 
             SubRecipeListEntries = subRecipeEntries, 
             TotalIngredients = totalIngredients, 
-            TotalShards = totalShards
+            TotalCrystals = totalCrystals
         };
     }
 
@@ -172,23 +172,23 @@ public class CraftCalculator
         };
     }
 
-    private List<TotalCrystals> GetTotalShards(List<TotalIngredient> totalIngredients)
+    private List<TotalCrystals> GetTotalCrystals(List<TotalIngredient> totalIngredients)
     {
         
         var crystals = Enum.GetValues(typeof(Crystal)).Cast<Crystal>();
-        List<TotalCrystals> totalShards = crystals.Select(c => new TotalCrystals(c)).ToList();
+        List<TotalCrystals> totalCrystals = crystals.Select(c => new TotalCrystals(c)).ToList();
 
-        var shards = totalIngredients.Where(i => _shardIds!.Contains(i.Item.Id)).ToList();
+        var crystalIngredients = totalIngredients.Where(i => _crystalIds!.Contains(i.Item.Id)).ToList();
 
-        foreach (var item in shards)
+        foreach (var item in crystalIngredients)
         {
             totalIngredients.Remove(item);
-            foreach (var totalShard in totalShards)
+            foreach (var totalCrystal in totalCrystals)
             {
-                totalShard.SetShardCount(item);
+                totalCrystal.SetCrystalCount(item);
             }
         }
 
-        return totalShards;
+        return totalCrystals;
     }
 }

@@ -37,8 +37,15 @@ partial class MainForm
         editToolStripMenuItem = new ToolStripMenuItem();
         importToolStripMenuItem = new ToolStripMenuItem();
         tableLayoutPanel1 = new TableLayoutPanel();
-        TotalShardsGridView = new DataGridView();
-        totalShardsBindingSource1 = new BindingSource(components);
+        TotalCrystalsGridView = new DataGridView();
+        nameDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
+        fireCountDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
+        earthCountDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
+        iceCountDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
+        windCountDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
+        lightningCountDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
+        waterCountDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
+        totalCrystalsBindingSource = new BindingSource(components);
         SubRecipeListGridView = new DataGridView();
         dataGridViewTextBoxColumn1 = new DataGridViewTextBoxColumn();
         dataGridViewTextBoxColumn2 = new DataGridViewTextBoxColumn();
@@ -59,20 +66,18 @@ partial class MainForm
         itemDataGridViewTextBoxColumn1 = new DataGridViewTextBoxColumn();
         totalIngredientBindingSource1 = new BindingSource(components);
         label1 = new Label();
-        totalShardsBindingSource = new BindingSource(components);
         totalIngredientBindingSource = new BindingSource(components);
         recipeListEntryDTOBindingSource = new BindingSource(components);
         ingredientDTOBindingSource = new BindingSource(components);
         menuStrip1.SuspendLayout();
         tableLayoutPanel1.SuspendLayout();
-        ((System.ComponentModel.ISupportInitialize)TotalShardsGridView).BeginInit();
-        ((System.ComponentModel.ISupportInitialize)totalShardsBindingSource1).BeginInit();
+        ((System.ComponentModel.ISupportInitialize)TotalCrystalsGridView).BeginInit();
+        ((System.ComponentModel.ISupportInitialize)totalCrystalsBindingSource).BeginInit();
         ((System.ComponentModel.ISupportInitialize)SubRecipeListGridView).BeginInit();
         ((System.ComponentModel.ISupportInitialize)recipeListEntryBindingSource).BeginInit();
         ((System.ComponentModel.ISupportInitialize)RecipeListEntryGridView).BeginInit();
         ((System.ComponentModel.ISupportInitialize)TotalIngredientsListView).BeginInit();
         ((System.ComponentModel.ISupportInitialize)totalIngredientBindingSource1).BeginInit();
-        ((System.ComponentModel.ISupportInitialize)totalShardsBindingSource).BeginInit();
         ((System.ComponentModel.ISupportInitialize)totalIngredientBindingSource).BeginInit();
         ((System.ComponentModel.ISupportInitialize)recipeListEntryDTOBindingSource).BeginInit();
         ((System.ComponentModel.ISupportInitialize)ingredientDTOBindingSource).BeginInit();
@@ -125,7 +130,7 @@ partial class MainForm
         tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 70F));
         tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 70F));
         tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 70F));
-        tableLayoutPanel1.Controls.Add(TotalShardsGridView, 0, 7);
+        tableLayoutPanel1.Controls.Add(TotalCrystalsGridView, 0, 7);
         tableLayoutPanel1.Controls.Add(SubRecipeListGridView, 0, 4);
         tableLayoutPanel1.Controls.Add(label4, 0, 3);
         tableLayoutPanel1.Controls.Add(AddButton, 5, 0);
@@ -152,25 +157,86 @@ partial class MainForm
         tableLayoutPanel1.Size = new Size(560, 574);
         tableLayoutPanel1.TabIndex = 1;
         // 
-        // TotalShardsGridView
+        // TotalCrystalsGridView
         // 
-        TotalShardsGridView.AllowUserToAddRows = false;
-        TotalShardsGridView.AllowUserToDeleteRows = false;
-        TotalShardsGridView.AllowUserToResizeColumns = false;
-        TotalShardsGridView.AllowUserToResizeRows = false;
-        TotalShardsGridView.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-        TotalShardsGridView.AutoGenerateColumns = false;
-        TotalShardsGridView.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-        tableLayoutPanel1.SetColumnSpan(TotalShardsGridView, 6);
-        TotalShardsGridView.DataSource = totalShardsBindingSource1;
-        TotalShardsGridView.Enabled = false;
-        TotalShardsGridView.Location = new Point(3, 466);
-        TotalShardsGridView.Name = "TotalShardsGridView";
-        TotalShardsGridView.ReadOnly = true;
-        TotalShardsGridView.RowHeadersVisible = false;
-        TotalShardsGridView.Size = new Size(554, 105);
-        TotalShardsGridView.TabIndex = 11;
-        TotalShardsGridView.SelectionChanged += GridView_SelectionChanged;
+        TotalCrystalsGridView.AllowUserToAddRows = false;
+        TotalCrystalsGridView.AllowUserToDeleteRows = false;
+        TotalCrystalsGridView.AllowUserToResizeColumns = false;
+        TotalCrystalsGridView.AllowUserToResizeRows = false;
+        TotalCrystalsGridView.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+        TotalCrystalsGridView.AutoGenerateColumns = false;
+        TotalCrystalsGridView.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+        TotalCrystalsGridView.Columns.AddRange(new DataGridViewColumn[] { nameDataGridViewTextBoxColumn, fireCountDataGridViewTextBoxColumn, earthCountDataGridViewTextBoxColumn, iceCountDataGridViewTextBoxColumn, windCountDataGridViewTextBoxColumn, lightningCountDataGridViewTextBoxColumn, waterCountDataGridViewTextBoxColumn });
+        tableLayoutPanel1.SetColumnSpan(TotalCrystalsGridView, 6);
+        TotalCrystalsGridView.DataSource = totalCrystalsBindingSource;
+        TotalCrystalsGridView.Enabled = false;
+        TotalCrystalsGridView.Location = new Point(3, 466);
+        TotalCrystalsGridView.Name = "TotalCrystalsGridView";
+        TotalCrystalsGridView.ReadOnly = true;
+        TotalCrystalsGridView.RowHeadersVisible = false;
+        TotalCrystalsGridView.Size = new Size(554, 105);
+        TotalCrystalsGridView.TabIndex = 11;
+        TotalCrystalsGridView.SelectionChanged += GridView_SelectionChanged;
+        // 
+        // nameDataGridViewTextBoxColumn
+        // 
+        nameDataGridViewTextBoxColumn.DataPropertyName = "Name";
+        nameDataGridViewTextBoxColumn.HeaderText = "Name";
+        nameDataGridViewTextBoxColumn.Name = "nameDataGridViewTextBoxColumn";
+        nameDataGridViewTextBoxColumn.ReadOnly = true;
+        nameDataGridViewTextBoxColumn.Width = 75;
+        // 
+        // fireCountDataGridViewTextBoxColumn
+        // 
+        fireCountDataGridViewTextBoxColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+        fireCountDataGridViewTextBoxColumn.DataPropertyName = "FireCount";
+        fireCountDataGridViewTextBoxColumn.HeaderText = "Fire";
+        fireCountDataGridViewTextBoxColumn.Name = "fireCountDataGridViewTextBoxColumn";
+        fireCountDataGridViewTextBoxColumn.ReadOnly = true;
+        // 
+        // earthCountDataGridViewTextBoxColumn
+        // 
+        earthCountDataGridViewTextBoxColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+        earthCountDataGridViewTextBoxColumn.DataPropertyName = "EarthCount";
+        earthCountDataGridViewTextBoxColumn.HeaderText = "Earth";
+        earthCountDataGridViewTextBoxColumn.Name = "earthCountDataGridViewTextBoxColumn";
+        earthCountDataGridViewTextBoxColumn.ReadOnly = true;
+        // 
+        // iceCountDataGridViewTextBoxColumn
+        // 
+        iceCountDataGridViewTextBoxColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+        iceCountDataGridViewTextBoxColumn.DataPropertyName = "IceCount";
+        iceCountDataGridViewTextBoxColumn.HeaderText = "Ice";
+        iceCountDataGridViewTextBoxColumn.Name = "iceCountDataGridViewTextBoxColumn";
+        iceCountDataGridViewTextBoxColumn.ReadOnly = true;
+        // 
+        // windCountDataGridViewTextBoxColumn
+        // 
+        windCountDataGridViewTextBoxColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+        windCountDataGridViewTextBoxColumn.DataPropertyName = "WindCount";
+        windCountDataGridViewTextBoxColumn.HeaderText = "Wind";
+        windCountDataGridViewTextBoxColumn.Name = "windCountDataGridViewTextBoxColumn";
+        windCountDataGridViewTextBoxColumn.ReadOnly = true;
+        // 
+        // lightningCountDataGridViewTextBoxColumn
+        // 
+        lightningCountDataGridViewTextBoxColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+        lightningCountDataGridViewTextBoxColumn.DataPropertyName = "LightningCount";
+        lightningCountDataGridViewTextBoxColumn.HeaderText = "Lightning";
+        lightningCountDataGridViewTextBoxColumn.Name = "lightningCountDataGridViewTextBoxColumn";
+        lightningCountDataGridViewTextBoxColumn.ReadOnly = true;
+        // 
+        // waterCountDataGridViewTextBoxColumn
+        // 
+        waterCountDataGridViewTextBoxColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+        waterCountDataGridViewTextBoxColumn.DataPropertyName = "WaterCount";
+        waterCountDataGridViewTextBoxColumn.HeaderText = "Water";
+        waterCountDataGridViewTextBoxColumn.Name = "waterCountDataGridViewTextBoxColumn";
+        waterCountDataGridViewTextBoxColumn.ReadOnly = true;
+        // 
+        // totalCrystalsBindingSource
+        // 
+        totalCrystalsBindingSource.DataSource = typeof(TotalCrystals);
         // 
         // SubRecipeListGridView
         // 
@@ -422,14 +488,13 @@ partial class MainForm
         menuStrip1.PerformLayout();
         tableLayoutPanel1.ResumeLayout(false);
         tableLayoutPanel1.PerformLayout();
-        ((System.ComponentModel.ISupportInitialize)TotalShardsGridView).EndInit();
-        ((System.ComponentModel.ISupportInitialize)totalShardsBindingSource1).EndInit();
+        ((System.ComponentModel.ISupportInitialize)TotalCrystalsGridView).EndInit();
+        ((System.ComponentModel.ISupportInitialize)totalCrystalsBindingSource).EndInit();
         ((System.ComponentModel.ISupportInitialize)SubRecipeListGridView).EndInit();
         ((System.ComponentModel.ISupportInitialize)recipeListEntryBindingSource).EndInit();
         ((System.ComponentModel.ISupportInitialize)RecipeListEntryGridView).EndInit();
         ((System.ComponentModel.ISupportInitialize)TotalIngredientsListView).EndInit();
         ((System.ComponentModel.ISupportInitialize)totalIngredientBindingSource1).EndInit();
-        ((System.ComponentModel.ISupportInitialize)totalShardsBindingSource).EndInit();
         ((System.ComponentModel.ISupportInitialize)totalIngredientBindingSource).EndInit();
         ((System.ComponentModel.ISupportInitialize)recipeListEntryDTOBindingSource).EndInit();
         ((System.ComponentModel.ISupportInitialize)ingredientDTOBindingSource).EndInit();
@@ -461,15 +526,7 @@ partial class MainForm
     private DataGridViewTextBoxColumn countDataGridViewTextBoxColumn;
     private DataGridView SubRecipeListGridView;
     private Label label4;
-    private DataGridView TotalShardsGridView;
-    private DataGridViewTextBoxColumn nameDataGridViewTextBoxColumn;
-    private DataGridViewTextBoxColumn fireCountDataGridViewTextBoxColumn;
-    private DataGridViewTextBoxColumn earthCountDataGridViewTextBoxColumn;
-    private DataGridViewTextBoxColumn iceCountDataGridViewTextBoxColumn;
-    private DataGridViewTextBoxColumn windCountDataGridViewTextBoxColumn;
-    private DataGridViewTextBoxColumn lightningCountDataGridViewTextBoxColumn;
-    private DataGridViewTextBoxColumn waterCountDataGridViewTextBoxColumn;
-    private BindingSource totalShardsBindingSource;
+    private DataGridView TotalCrystalsGridView;
     private BindingSource totalIngredientBindingSource;
     private DataGridViewTextBoxColumn Recipe;
     private DataGridViewTextBoxColumn countDataGridViewTextBoxColumn1;
@@ -483,9 +540,16 @@ partial class MainForm
     private DataGridViewTextBoxColumn dataGridViewTextBoxColumn8;
     private DataGridViewTextBoxColumn dataGridViewTextBoxColumn9;
     private DataGridViewTextBoxColumn dataGridViewTextBoxColumn10;
-    private BindingSource totalShardsBindingSource1;
     private DataGridViewTextBoxColumn dataGridViewTextBoxColumn3;
     private BindingSource totalIngredientBindingSource1;
     private DataGridViewTextBoxColumn itemDataGridViewTextBoxColumn;
     private DataGridViewTextBoxColumn itemDataGridViewTextBoxColumn1;
+    private DataGridViewTextBoxColumn nameDataGridViewTextBoxColumn;
+    private DataGridViewTextBoxColumn fireCountDataGridViewTextBoxColumn;
+    private DataGridViewTextBoxColumn earthCountDataGridViewTextBoxColumn;
+    private DataGridViewTextBoxColumn iceCountDataGridViewTextBoxColumn;
+    private DataGridViewTextBoxColumn windCountDataGridViewTextBoxColumn;
+    private DataGridViewTextBoxColumn lightningCountDataGridViewTextBoxColumn;
+    private DataGridViewTextBoxColumn waterCountDataGridViewTextBoxColumn;
+    private BindingSource totalCrystalsBindingSource;
 }

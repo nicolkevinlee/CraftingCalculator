@@ -24,7 +24,7 @@ public class TotalCrystals
         _items = dbController.GetAllCrystals()[_crystalType];
     }
 
-    public void SetShardCount(TotalIngredient totalIngredient)
+    public void SetCrystalCount(TotalIngredient totalIngredient)
     {
         switch (GetIngredientCyrstalElement(totalIngredient))
         {

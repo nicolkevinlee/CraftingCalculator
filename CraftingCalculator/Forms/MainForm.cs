@@ -11,7 +11,7 @@ public partial class MainForm : Form
     private BindingList<RecipeListEntry> _recipeListEntries;
     private BindingList<RecipeListEntry> _subRecipeEntries;
     private BindingList<TotalIngredient> _totalIngredients;
-    private BindingList<TotalCrystals> _totalShards;
+    private BindingList<TotalCrystals> _totalCrystals;
 
     private RecipeListEntry? _selectedRecipeListEntry;
     private RecipeList? _currentRecipeList;
@@ -23,14 +23,14 @@ public partial class MainForm : Form
         _recipeListEntries = new BindingList<RecipeListEntry>();
         _subRecipeEntries = new BindingList<RecipeListEntry>();
         _totalIngredients = new BindingList<TotalIngredient>();
-        _totalShards = new BindingList<TotalCrystals>();
+        _totalCrystals = new BindingList<TotalCrystals>();
 
         InitializeComponent();
 
         RecipeListEntryGridView.DataSource = _recipeListEntries;
         SubRecipeListGridView.DataSource = _subRecipeEntries;
         TotalIngredientsListView.DataSource = _totalIngredients;
-        TotalShardsGridView.DataSource = _totalShards;
+        TotalCrystalsGridView.DataSource = _totalCrystals;
     }
 
     private void importToolStripMenuItem_Click(object sender, EventArgs e)
@@ -96,17 +96,17 @@ public partial class MainForm : Form
 
         _subRecipeEntries.Clear();
         _totalIngredients.Clear();
-        _totalShards.Clear();
+        _totalCrystals.Clear();
 
         _subRecipeEntries = new BindingList<RecipeListEntry>(result.SubRecipeListEntries);
         _totalIngredients = new BindingList<TotalIngredient>(result.TotalIngredients);
-        _totalShards = new BindingList<TotalCrystals>(result.TotalShards);
+        _totalCrystals = new BindingList<TotalCrystals>(result.TotalCrystals);
 
         SubRecipeListGridView.DataSource = _subRecipeEntries;
         TotalIngredientsListView.DataSource = _totalIngredients;
-        TotalShardsGridView.DataSource = _totalShards;
+        TotalCrystalsGridView.DataSource = _totalCrystals;
 
-        TotalShardsGridView.Refresh();
+        TotalCrystalsGridView.Refresh();
 
     }
 
@@ -122,7 +122,7 @@ public partial class MainForm : Form
         RecipeListEntryGridView.ClearSelection();
         SubRecipeListGridView.ClearSelection();
         TotalIngredientsListView.ClearSelection();
-        TotalShardsGridView.ClearSelection();
+        TotalCrystalsGridView.ClearSelection();
     }
 
     private void SaveButton_Click(object sender, EventArgs e)
