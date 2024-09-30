@@ -1,9 +1,27 @@
 ﻿using CraftingCalculator.DTOs;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace CraftingCalculator.Data;
 
 class RecipeParser
 {
+    private List<ItemDTO> _itemDTOs;
+    private List<CraftTypeDTO> _craftTypeDTOs;
+    private List<RecipeDTO> _recipeDTOs;
+    private List<IngredientDTO> _ingredientDTOs;
+
+    public RecipeParser()
+    {
+        ResetDTOs();
+    }
+
+    private void ResetDTOs()
+    {
+        _itemDTOs = new List<ItemDTO>();
+        _craftTypeDTOs = new List<CraftTypeDTO>();
+        _recipeDTOs = new List<RecipeDTO>();
+        _ingredientDTOs = new List<IngredientDTO>();
+    }
 
     public Task<ParseResult> ParseCsvData(List<string[]> rawData, Action<ParseResult> OnParseComplete)
     {
@@ -11,11 +29,7 @@ class RecipeParser
         var progress = progressHandler as IProgress<ParseResult>;
         var task = new Task<ParseResult>(() =>
         {
-            List<ItemDTO> itemDTOs = new List<ItemDTO>();
-            List<CraftTypeDTO> craftTypeDTOs = new List<CraftTypeDTO>();
-            List<RecipeDTO> recipeDTOs = new List<RecipeDTO>();
-            List<IngredientDTO> ingredientDTOs = new List<IngredientDTO>();
-
+       
             foreach (var row in rawData)
             {
                 var recipeItemName = row[1].Trim();
@@ -23,79 +37,21 @@ class RecipeParser
                 var recipeLevel = row[3].Trim();
                 var yield = row[21].Trim();
 
-                CraftTypeDTO? craftTypeDTO = GetCraftTypeDTOWithName(craftTypeDTOs, typeName);
-                ItemDTO? recipeItemDTO = GetItemDTOWithName(itemDTOs, recipeItemName);
-
-                if (craftTypeDTO == null)
-                {
-                    craftTypeDTO = new CraftTypeDTO
-                    {
-                        Id = (uint)craftTypeDTOs.Count,
-                        Name = typeName
-                    };
-                    craftTypeDTOs.Add(craftTypeDTO);
-                }
-
-                if (recipeItemDTO == null)
-                {
-                    recipeItemDTO = new ItemDTO
-                    {
-                        Id = (uint)itemDTOs.Count,
-                        Name = recipeItemName,
-                    };
-                    itemDTOs.Add(recipeItemDTO);
-                }
-
-                RecipeDTO recipeDTO = new RecipeDTO()
-                {
-                    Id = (uint)recipeDTOs.Count,
-                    CraftTypeDTO = craftTypeDTO,
-                    ItemDTO = recipeItemDTO,
-                    Yield = byte.Parse(yield),
-                    RecipeLevel = ushort.Parse(recipeLevel)
-                };
-
-                recipeDTOs.Add(recipeDTO);
-
-                for (int i = 22, j = 0; i < row.Length && j < 8; i += 5, j++)
-                {
-                    var itemName = row[i + 1].Trim();
-
-                    if (string.IsNullOrEmpty(itemName)) continue;
-
-                    var count = row[i + 4].Trim();
-
-                    ItemDTO? ingredientItem = GetItemDTOWithName(itemDTOs, itemName);
-
-                    if (ingredientItem == null)
-                    {
-                        ingredientItem = new ItemDTO
-                        {
-                            Id = (uint)itemDTOs.Count,
-                            Name = itemName
-                        };
-                        itemDTOs.Add(ingredientItem);
-                    }
-
-                    var ingredient = new IngredientDTO
-                    {
-                        Id = (uint)ingredientDTOs.Count,
-                        RecipeDTO = recipeDTO,
-                        ItemDTO = ingredientItem,
-                        Count = byte.Parse(count)
-                    };
-
-                    ingredientDTOs.Add(ingredient);
-                }
+                CraftTypeDTO craftTypeDTO = CreateCraftType(typeName);
+                ItemDTO recipeItemDTO = CreateItem(recipeItemName);
+                RecipeDTO recipeDTO = ParseRecipe(craftTypeDTO, recipeItemDTO, yield, recipeLevel);
+                ParseIngredients(row, recipeDTO);                
             }
 
             ParseResult result = new ParseResult()
             {
-                ItemDTOs = itemDTOs,
-                CraftTypeDTOs = craftTypeDTOs,
-                RecipeDTOs = recipeDTOs,
-                IngredientDTOs = ingredientDTOs
+                ItemDTOs = _itemDTOs!,
+                CraftTypeDTOs = _craftTypeDTOs!,
+                RecipeDTOs = _recipeDTOs!,
+                IngredientDTOs = _ingredientDTOs!
             };
+
+            ResetDTOs();
 
             progress.Report(result);
 
@@ -107,13 +63,76 @@ class RecipeParser
         return task;
     }
 
-    private CraftTypeDTO? GetCraftTypeDTOWithName(List<CraftTypeDTO> craftTypes, string craftTypeName)
+    private CraftTypeDTO CreateCraftType(string craftTypeName)
     {
-        return craftTypes.FirstOrDefault(t => t.Name == craftTypeName);
+        var craftTypeDTO = _craftTypeDTOs!.FirstOrDefault(t => t.Name == craftTypeName);
+
+        if (craftTypeDTO == null)
+        {
+            craftTypeDTO = new CraftTypeDTO
+            {
+                Id = (uint)_craftTypeDTOs!.Count,
+                Name = craftTypeName
+            };
+            _craftTypeDTOs.Add(craftTypeDTO);
+        }
+
+        return craftTypeDTO;
     }
 
-    private ItemDTO? GetItemDTOWithName(List<ItemDTO> items, string itemName)
+    private ItemDTO CreateItem(string itemName)
     {
-        return items.FirstOrDefault(t => t.Name == itemName);
+        var itemDTO = _itemDTOs.FirstOrDefault(t => t.Name == itemName);
+
+        if (itemDTO == null)
+        {
+            itemDTO = new ItemDTO
+            {
+                Id = (uint)_itemDTOs.Count,
+                Name = itemName,
+            };
+            _itemDTOs.Add(itemDTO);
+        }
+
+        return itemDTO;
+    }
+
+    private RecipeDTO ParseRecipe(CraftTypeDTO craftTypeDTO, ItemDTO recipeItemDTO, string yield, string recipeLevel)
+    {
+        var recipeDTO = new RecipeDTO()
+        {
+            Id = (uint)_recipeDTOs.Count,
+            CraftTypeDTO = craftTypeDTO,
+            ItemDTO = recipeItemDTO,
+            Yield = byte.Parse(yield),
+            RecipeLevel = ushort.Parse(recipeLevel)
+        };
+        _recipeDTOs.Add(recipeDTO);
+
+        return recipeDTO;
+    }
+
+    private void ParseIngredients(string[] row, RecipeDTO recipeDTO)
+    {
+        for (int i = 22, j = 0; i < row.Length && j < 8; i += 5, j++)
+        {
+            var itemName = row[i + 1].Trim();
+
+            if (string.IsNullOrEmpty(itemName)) continue;
+
+            var count = row[i + 4].Trim();
+
+            ItemDTO ingredientItem = CreateItem(itemName);
+
+            var ingredient = new IngredientDTO
+            {
+                Id = (uint)_ingredientDTOs.Count,
+                RecipeDTO = recipeDTO,
+                ItemDTO = ingredientItem,
+                Count = byte.Parse(count)
+            };
+
+            _ingredientDTOs.Add(ingredient);
+        }
     }
 }

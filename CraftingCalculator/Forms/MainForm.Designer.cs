@@ -66,9 +66,7 @@ partial class MainForm
         itemDataGridViewTextBoxColumn1 = new DataGridViewTextBoxColumn();
         totalIngredientBindingSource1 = new BindingSource(components);
         label1 = new Label();
-        totalIngredientBindingSource = new BindingSource(components);
         recipeListEntryDTOBindingSource = new BindingSource(components);
-        ingredientDTOBindingSource = new BindingSource(components);
         menuStrip1.SuspendLayout();
         tableLayoutPanel1.SuspendLayout();
         ((System.ComponentModel.ISupportInitialize)TotalCrystalsGridView).BeginInit();
@@ -78,9 +76,7 @@ partial class MainForm
         ((System.ComponentModel.ISupportInitialize)RecipeListEntryGridView).BeginInit();
         ((System.ComponentModel.ISupportInitialize)TotalIngredientsListView).BeginInit();
         ((System.ComponentModel.ISupportInitialize)totalIngredientBindingSource1).BeginInit();
-        ((System.ComponentModel.ISupportInitialize)totalIngredientBindingSource).BeginInit();
         ((System.ComponentModel.ISupportInitialize)recipeListEntryDTOBindingSource).BeginInit();
-        ((System.ComponentModel.ISupportInitialize)ingredientDTOBindingSource).BeginInit();
         SuspendLayout();
         // 
         // menuStrip1
@@ -469,10 +465,6 @@ partial class MainForm
         // 
         recipeListEntryDTOBindingSource.DataSource = typeof(DTOs.RecipeListEntryDTO);
         // 
-        // ingredientDTOBindingSource
-        // 
-        ingredientDTOBindingSource.DataSource = typeof(DTOs.IngredientDTO);
-        // 
         // MainForm
         // 
         AutoScaleDimensions = new SizeF(7F, 15F);
@@ -495,9 +487,7 @@ partial class MainForm
         ((System.ComponentModel.ISupportInitialize)RecipeListEntryGridView).EndInit();
         ((System.ComponentModel.ISupportInitialize)TotalIngredientsListView).EndInit();
         ((System.ComponentModel.ISupportInitialize)totalIngredientBindingSource1).EndInit();
-        ((System.ComponentModel.ISupportInitialize)totalIngredientBindingSource).EndInit();
         ((System.ComponentModel.ISupportInitialize)recipeListEntryDTOBindingSource).EndInit();
-        ((System.ComponentModel.ISupportInitialize)ingredientDTOBindingSource).EndInit();
         ResumeLayout(false);
         PerformLayout();
     }
@@ -520,14 +510,12 @@ partial class MainForm
     private Label label2;
     private Label label3;
     private TextBox ListNameTextBox;
-    private BindingSource ingredientDTOBindingSource;
     private BindingSource recipeListEntryDTOBindingSource;
     private DataGridViewTextBoxColumn itemDTODataGridViewTextBoxColumn;
     private DataGridViewTextBoxColumn countDataGridViewTextBoxColumn;
     private DataGridView SubRecipeListGridView;
     private Label label4;
     private DataGridView TotalCrystalsGridView;
-    private BindingSource totalIngredientBindingSource;
     private DataGridViewTextBoxColumn Recipe;
     private DataGridViewTextBoxColumn countDataGridViewTextBoxColumn1;
     private BindingSource recipeListEntryBindingSource;

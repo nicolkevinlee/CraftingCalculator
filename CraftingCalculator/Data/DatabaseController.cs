@@ -29,6 +29,24 @@ public class DatabaseController
         return recipe;
     }
 
+    public Recipe? GetRecipe(uint itemId, uint craftTypeId)
+    {
+        using (CraftingDbContext dbContext = new CraftingDbContext())
+        {
+            return dbContext.Recipes.FirstOrDefault(r => r.ItemId == itemId && r.CraftTypeId == craftTypeId);
+        }
+    }
+
+    public List<Recipe> AddRecipes(List<Recipe> recipes)
+    {
+        using (CraftingDbContext dbContext = new CraftingDbContext())
+        {
+            dbContext.Recipes.AddRange(recipes);
+            dbContext.SaveChanges();
+        }
+        return recipes;
+    }
+
     public bool DeleteRecipe(uint recipeId)
     {
         try
@@ -79,6 +97,32 @@ public class DatabaseController
             return searchResult;
         }
     }
+
+    public bool IsItemNameExist(string name)
+    {
+        using (var dbContext = new CraftingDbContext())
+        {
+            return dbContext.Items.Any(t => t.Name == name);
+        }
+    }
+    public Item? GetItem(string name)
+    {
+        using (var dbContext = new CraftingDbContext())
+        {
+            return dbContext.Items.FirstOrDefault(i => i.Name == name);
+        }
+    }
+
+    public List<Item> AddItems(List<Item> items)
+    {
+        using (var dbContext = new CraftingDbContext())
+        {
+            dbContext.Items.AddRange(items);
+            dbContext.SaveChanges();
+            return items;
+        }
+    }
+
     public bool DeleteItem(Item item)
     {
         using (var dbContext = new CraftingDbContext())
@@ -101,6 +145,31 @@ public class DatabaseController
             var searchResult = items.OrderBy(i => i.Id).ToList();
 
             return searchResult;
+        }
+    }
+
+    public bool IsCraftNameExist(string name)
+    {
+        using (var dbContext = new CraftingDbContext())
+        {
+            return dbContext.CraftTypes.Any(t => t.Name == name);
+        }
+    }
+    public CraftType? GetCraftType(string name)
+    {
+        using (var dbContext = new CraftingDbContext())
+        {
+            return dbContext.CraftTypes.FirstOrDefault(i => i.Name == name);
+        }
+    }
+
+    public List<CraftType> AddCraftTypes(List<CraftType> craftTypes)
+    {
+        using (var dbContext = new CraftingDbContext())
+        {
+            dbContext.CraftTypes.AddRange(craftTypes);
+            dbContext.SaveChanges();
+            return craftTypes;
         }
     }
 
@@ -167,6 +236,14 @@ public class DatabaseController
         return recipeListEntries;
     }
 
+    public Ingredient? GetIngredient(uint itemId, uint recipeId)
+    {
+        using (var dbContext = new CraftingDbContext())
+        {
+            return dbContext.Ingredients.FirstOrDefault(i => i.ItemId == itemId && i.RecipeId == recipeId);
+        }
+    }
+
     public List<Ingredient> GetRecipeIngredients(uint recipeID)
     {
         using(var dbContext = new CraftingDbContext())
@@ -174,6 +251,16 @@ public class DatabaseController
             return GetRecipeIngredients(recipeID, dbContext);
         }
         
+    }
+
+    public List<Ingredient> AddIngredients(List<Ingredient> ingredients)
+    {
+        using (CraftingDbContext dbContext = new CraftingDbContext())
+        {
+            dbContext.Ingredients.AddRange(ingredients);
+            dbContext.SaveChanges();
+        }
+        return ingredients;
     }
 
     public List<Ingredient> GetRecipeIngredients(uint recipeID, CraftingDbContext dbContext)
